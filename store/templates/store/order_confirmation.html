@@ -1,0 +1,1149 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Confirmed — Teakay Store</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ───────────── CSS VARIABLES ───────────── */
+      :root {
+        --bg: #f1f5f9;
+        --card-bg: #ffffff;
+        --text: #0f172a;
+        --text-secondary: #64748b;
+        --border: #e2e8f0;
+        --hover: #f1f5f9;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.06);
+        --primary: #4f46e5;
+        --primary-hover: #4338ca;
+        --success: #22c55e;
+        --success-hover: #16a34a;
+        --danger: #ef4444;
+        --badge-bg: #ef4444;
+        --badge-text: #ffffff;
+        --footer-bg: #ffffff;
+        --footer-text: #94a3b8;
+        --footer-border: #e2e8f0;
+        --receipt-header-bg: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        --receipt-header-text: #ffffff;
+        --receipt-header-accent: #e94560;
+        --status-bg: #f8fafc;
+        --status-border: #e8ecf0;
+        --customer-bg: #f8fafc;
+        --customer-border: #e8ecf0;
+        --table-header-bg: #f8fafc;
+        --table-border: #e8ecf0;
+        --totals-bg: #fafbfc;
+        --totals-border: #e8ecf0;
+        --grand-total-border: #1a1a2e;
+        --footer-meta: #95a5a6;
+        --print-bg: #ffffff;
+      }
+
+      /* ───────────── DARK MODE ───────────── */
+      [data-theme="dark"] {
+        --bg: #0f172a;
+        --card-bg: #1e293b;
+        --text: #f1f5f9;
+        --text-secondary: #94a3b8;
+        --border: #334155;
+        --hover: #2d3748;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.3);
+        --footer-bg: #1e293b;
+        --footer-text: #64748b;
+        --footer-border: #334155;
+        --badge-bg: #ef4444;
+        --badge-text: #ffffff;
+        --receipt-header-bg: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f3460 100%);
+        --receipt-header-text: #f1f5f9;
+        --receipt-header-accent: #e94560;
+        --status-bg: #2d3748;
+        --status-border: #334155;
+        --customer-bg: #2d3748;
+        --customer-border: #334155;
+        --table-header-bg: #2d3748;
+        --table-border: #334155;
+        --totals-bg: #2d3748;
+        --totals-border: #334155;
+        --grand-total-border: #e94560;
+        --footer-meta: #94a3b8;
+        --print-bg: #1e293b;
+      }
+
+      /* ───────────── RESET ───────────── */
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        transition: background 0.3s ease, color 0.3s ease;
+        padding: 1rem;
+      }
+
+      /* ───────────── NAVBAR ───────────── */
+      .navbar {
+        background: var(--card-bg);
+        border-bottom: 1px solid var(--border);
+        padding: 0.7rem 1.25rem;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        box-shadow: var(--shadow);
+        transition: background 0.3s ease, border-color 0.3s ease;
+        border-radius: 0.75rem;
+        margin-bottom: 1rem;
+      }
+
+      .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.5rem 0.75rem;
+      }
+
+      .nav-logo {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: var(--text);
+        text-decoration: none;
+        letter-spacing: -0.025em;
+        white-space: nowrap;
+        transition: color 0.3s ease;
+      }
+
+      .nav-logo span {
+        color: var(--primary);
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 0.15rem;
+        flex-wrap: wrap;
+      }
+
+      .nav-links a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.4rem 0.75rem;
+        border-radius: 0.75rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+      }
+
+      .nav-links a:hover {
+        background: var(--hover);
+        color: var(--text);
+      }
+
+      .nav-links .username {
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        padding: 0.4rem 0.5rem;
+        white-space: nowrap;
+      }
+
+      /* ── Cart with Badge ── */
+      .cart-wrapper {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.4rem 0.75rem;
+        border-radius: 0.75rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: all 0.2s ease;
+      }
+
+      .cart-wrapper:hover {
+        background: var(--hover);
+        color: var(--text);
+      }
+
+      .cart-badge {
+        position: absolute;
+        top: -0.2rem;
+        right: -0.15rem;
+        background: var(--badge-bg);
+        color: var(--badge-text);
+        font-size: 0.6rem;
+        font-weight: 700;
+        min-width: 1.1rem;
+        height: 1.1rem;
+        border-radius: 9999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 0.25rem;
+        border: 2px solid var(--card-bg);
+        box-shadow: 0 2px 6px rgba(239, 68, 68, 0.25);
+        animation: pulse 2s ease-in-out infinite;
+        line-height: 1;
+        transition: border-color 0.3s ease;
+      }
+
+      .cart-badge.zero {
+        display: none;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+      }
+
+      .nav-divider {
+        width: 1px;
+        height: 1.5rem;
+        background: var(--border);
+        margin: 0 0.1rem;
+        transition: background 0.3s ease;
+      }
+
+      /* ───────────── DARK MODE TOGGLE ───────────── */
+      .theme-toggle {
+        background: var(--hover);
+        border: 1px solid var(--border);
+        border-radius: 9999px;
+        padding: 0.3rem 0.6rem;
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-family: "Inter", sans-serif;
+        font-weight: 500;
+      }
+
+      .theme-toggle:hover {
+        background: var(--primary);
+        color: #ffffff;
+        border-color: var(--primary);
+      }
+
+      /* ───────────── CONFIRMATION CONTAINER ───────────── */
+      .confirmation-container {
+        max-width: 820px;
+        margin: 0 auto;
+        flex: 1;
+        width: 100%;
+        animation: slideUp 0.5s ease-out;
+      }
+
+      @keyframes slideUp {
+        0% {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ───────────── RECEIPT CARD ───────────── */
+      .receipt-card {
+        background: var(--card-bg);
+        border-radius: 1.5rem;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-lg);
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+
+      /* ── Header ── */
+      .receipt-header {
+        background: var(--receipt-header-bg);
+        padding: 2rem 2.5rem 1.75rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        transition: background 0.3s ease;
+      }
+
+      .receipt-header::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 300px;
+        height: 300px;
+        background: rgba(233, 69, 96, 0.05);
+        border-radius: 50%;
+      }
+
+      .receipt-header::after {
+        content: "";
+        position: absolute;
+        bottom: -40%;
+        left: -10%;
+        width: 200px;
+        height: 200px;
+        background: rgba(233, 69, 96, 0.03);
+        border-radius: 50%;
+      }
+
+      .receipt-header .store-logo {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: var(--receipt-header-text);
+        letter-spacing: -1px;
+        position: relative;
+        z-index: 1;
+        transition: color 0.3s ease;
+      }
+
+      .receipt-header .store-logo span {
+        color: var(--receipt-header-accent);
+      }
+
+      .receipt-header .store-tagline {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.75rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        margin-top: 0.25rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      .receipt-header .receipt-title {
+        display: inline-block;
+        background: rgba(233, 69, 96, 0.2);
+        color: var(--receipt-header-accent);
+        padding: 0.35rem 1.5rem;
+        border-radius: 9999px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-top: 0.75rem;
+        position: relative;
+        z-index: 1;
+        border: 1px solid rgba(233, 69, 96, 0.3);
+        transition: all 0.3s ease;
+      }
+
+      .success-icon {
+        font-size: 2.8rem;
+        display: block;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 1;
+        animation: bounce 1s ease;
+      }
+
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        30% {
+          transform: scale(1.3);
+        }
+        50% {
+          transform: scale(0.9);
+        }
+        70% {
+          transform: scale(1.1);
+        }
+      }
+
+      /* ── Status Bar ── */
+      .order-status-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 2rem;
+        background: var(--status-bg);
+        border-bottom: 1px solid var(--status-border);
+        transition: all 0.3s ease;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .order-status-bar .order-number {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        transition: color 0.3s ease;
+      }
+
+      .order-status-bar .order-number strong {
+        color: var(--text);
+        font-size: 1rem;
+        transition: color 0.3s ease;
+      }
+
+      .order-status-bar .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        background: var(--success);
+        color: #ffffff;
+        padding: 0.25rem 1rem;
+        border-radius: 9999px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .order-status-bar .status-badge.pending {
+        background: #f59e0b;
+      }
+
+      /* ── Body ── */
+      .receipt-body {
+        padding: 1.75rem 2rem 2rem;
+        transition: padding 0.3s ease;
+      }
+
+      /* ── Customer Info ── */
+      .customer-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem 1.5rem;
+        background: var(--customer-bg);
+        padding: 1rem 1.25rem;
+        border-radius: 1rem;
+        border: 1px solid var(--customer-border);
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+      }
+
+      .customer-info .info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.1rem;
+      }
+
+      .customer-info .info-item .label {
+        font-size: 0.6rem;
+        font-weight: 700;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        transition: color 0.3s ease;
+      }
+
+      .customer-info .info-item .value {
+        font-size: 0.9rem;
+        color: var(--text);
+        font-weight: 600;
+        transition: color 0.3s ease;
+      }
+
+      .customer-info .info-item.full-width {
+        grid-column: 1 / -1;
+      }
+
+      /* ── Items Table ── */
+      .items-table-wrap {
+        margin: 1.25rem 0 1.5rem;
+        border-radius: 1rem;
+        border: 1px solid var(--table-border);
+        overflow: hidden;
+        transition: border-color 0.3s ease;
+      }
+
+      .items-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .items-table thead {
+        background: var(--table-header-bg);
+        border-bottom: 2px solid var(--table-border);
+        transition: all 0.3s ease;
+      }
+
+      .items-table thead th {
+        padding: 0.75rem 1.25rem;
+        text-align: left;
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        color: var(--text-secondary);
+        transition: color 0.3s ease;
+      }
+
+      .items-table thead th:last-child {
+        text-align: right;
+      }
+
+      .items-table tbody tr {
+        border-bottom: 1px solid var(--table-border);
+        transition: background 0.2s ease;
+      }
+
+      .items-table tbody tr:last-child {
+        border-bottom: none;
+      }
+
+      .items-table tbody tr:hover {
+        background: var(--hover);
+      }
+
+      .items-table tbody td {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.85rem;
+        color: var(--text);
+        transition: color 0.3s ease;
+      }
+
+      .items-table tbody td:last-child {
+        text-align: right;
+        font-weight: 600;
+      }
+
+      .items-table tbody .item-name {
+        font-weight: 500;
+      }
+
+      .items-table tbody .item-qty {
+        color: var(--text-secondary);
+        font-weight: 400;
+        transition: color 0.3s ease;
+      }
+
+      /* ── Totals ── */
+      .totals-section {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        padding: 1rem 1.5rem;
+        background: var(--totals-bg);
+        border-radius: 1rem;
+        border: 1px solid var(--totals-border);
+        transition: all 0.3s ease;
+      }
+
+      .totals-section .total-row {
+        display: flex;
+        justify-content: space-between;
+        width: 260px;
+        padding: 0.3rem 0;
+        font-size: 0.9rem;
+        color: var(--text);
+        transition: color 0.3s ease;
+      }
+
+      .totals-section .total-row .label {
+        color: var(--text-secondary);
+        font-weight: 400;
+        transition: color 0.3s ease;
+      }
+
+      .totals-section .total-row .amount {
+        font-weight: 600;
+      }
+
+      .totals-section .total-row.grand-total {
+        border-top: 2px solid var(--grand-total-border);
+        margin-top: 0.5rem;
+        padding-top: 0.75rem;
+        font-size: 1.1rem;
+        transition: border-color 0.3s ease;
+      }
+
+      .totals-section .total-row.grand-total .label {
+        font-weight: 700;
+        color: var(--text);
+      }
+
+      .totals-section .total-row.grand-total .amount {
+        font-weight: 800;
+        color: var(--receipt-header-accent);
+      }
+
+      /* ── Receipt Footer ── */
+      .receipt-footer {
+        padding: 1.25rem 2rem 1.75rem;
+        border-top: 2px dashed var(--border);
+        text-align: center;
+        transition: border-color 0.3s ease;
+      }
+
+      .receipt-footer .thank-you {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 0.25rem;
+        transition: color 0.3s ease;
+      }
+
+      .receipt-footer .thank-you span {
+        color: var(--receipt-header-accent);
+      }
+
+      .receipt-footer .footer-meta {
+        font-size: 0.75rem;
+        color: var(--footer-meta);
+        margin-top: 0.3rem;
+        transition: color 0.3s ease;
+      }
+
+      .receipt-footer .footer-meta .dot {
+        margin: 0 0.5rem;
+      }
+
+      .receipt-footer .footer-meta .receipt-id {
+        font-size: 0.65rem;
+        color: var(--text-secondary);
+        display: block;
+        margin-top: 0.25rem;
+        transition: color 0.3s ease;
+      }
+
+      /* ── Action Buttons ── */
+      .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        padding: 0.75rem 2rem;
+        border-radius: 0.75rem;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+        font-family: "Inter", sans-serif;
+        flex: 1;
+        min-width: 140px;
+        max-width: 240px;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: #ffffff;
+      }
+      .btn-primary:hover {
+        background: var(--primary-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(79, 70, 229, 0.3);
+      }
+
+      .btn-print {
+        background: var(--receipt-header-accent);
+        color: #ffffff;
+      }
+      .btn-print:hover {
+        background: #c0392b;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(233, 69, 96, 0.3);
+      }
+
+      /* ───────────── FOOTER ───────────── */
+      .footer {
+        background: var(--footer-bg);
+        border-top: 1px solid var(--footer-border);
+        padding: 1.25rem;
+        text-align: center;
+        margin-top: 2rem;
+        transition: all 0.3s ease;
+        border-radius: 0.75rem;
+      }
+
+      .footer p {
+        color: var(--footer-text);
+        font-size: 0.85rem;
+        font-weight: 400;
+        letter-spacing: 0.01em;
+        margin: 0.25rem 0;
+        transition: color 0.3s ease;
+      }
+
+      .footer p span {
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      /* ───────────── PRINT STYLES ───────────── */
+      @media print {
+        body {
+          background: var(--print-bg) !important;
+          padding: 0 !important;
+          margin: 0 !important;
+        }
+
+        .navbar {
+          display: none !important;
+        }
+        .footer {
+          display: none !important;
+        }
+        .action-buttons {
+          display: none !important;
+        }
+        .theme-toggle {
+          display: none !important;
+        }
+
+        .receipt-card {
+          box-shadow: none !important;
+          border: 1px solid #ddd !important;
+          border-radius: 0 !important;
+          margin: 0 !important;
+          max-width: 100% !important;
+        }
+
+        .receipt-header {
+          background: #1a1a2e !important;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+
+        .receipt-header .store-logo {
+          color: white !important;
+        }
+        .receipt-header .store-logo span {
+          color: #e94560 !important;
+        }
+
+        .order-status-bar .status-badge {
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+
+        .customer-info {
+          background: #f8fafc !important;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+
+        .confirmation-container {
+          margin: 0 !important;
+          padding: 0 !important;
+          max-width: 100% !important;
+        }
+
+        .receipt-body {
+          padding: 20px 25px !important;
+        }
+
+        .items-table thead {
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+
+        .totals-section .total-row.grand-total .amount {
+          color: #e94560 !important;
+        }
+
+        .receipt-footer .thank-you span {
+          color: #e94560 !important;
+        }
+      }
+
+      /* ───────────── RESPONSIVE ───────────── */
+      @media (max-width: 640px) {
+        .navbar {
+          padding: 0.5rem 0.75rem;
+          border-radius: 0.5rem;
+        }
+        .nav-container {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0.4rem;
+        }
+        .nav-logo {
+          text-align: center;
+          font-size: 1.1rem;
+        }
+        .nav-links {
+          justify-content: center;
+          gap: 0.1rem;
+          flex-wrap: wrap;
+        }
+        .nav-links a {
+          font-size: 0.75rem;
+          padding: 0.3rem 0.6rem;
+        }
+        .nav-links .username {
+          font-size: 0.7rem;
+          padding: 0.3rem 0.4rem;
+        }
+        .cart-wrapper {
+          font-size: 0.75rem;
+          padding: 0.3rem 0.6rem;
+        }
+        .cart-badge {
+          font-size: 0.5rem;
+          min-width: 0.9rem;
+          height: 0.9rem;
+          top: -0.15rem;
+          right: -0.1rem;
+        }
+        .nav-divider {
+          display: none;
+        }
+        .theme-toggle {
+          font-size: 0.7rem;
+          padding: 0.2rem 0.5rem;
+        }
+
+        body {
+          padding: 0.5rem;
+        }
+
+        .receipt-header {
+          padding: 1.5rem 1rem 1.25rem;
+        }
+        .receipt-header .store-logo {
+          font-size: 1.6rem;
+        }
+        .receipt-header .store-tagline {
+          font-size: 0.65rem;
+          letter-spacing: 2px;
+        }
+        .success-icon {
+          font-size: 2.2rem;
+        }
+
+        .order-status-bar {
+          flex-direction: column;
+          gap: 0.5rem;
+          padding: 0.5rem 1rem;
+          text-align: center;
+        }
+        .order-status-bar .order-number {
+          font-size: 0.8rem;
+        }
+
+        .receipt-body {
+          padding: 1rem 1rem 1.25rem;
+        }
+
+        .customer-info {
+          grid-template-columns: 1fr;
+          padding: 0.75rem 1rem;
+          gap: 0.3rem;
+        }
+        .customer-info .info-item.full-width {
+          grid-column: 1;
+        }
+
+        .items-table-wrap {
+          overflow-x: auto;
+        }
+        .items-table tbody td,
+        .items-table thead th {
+          padding: 0.5rem 0.75rem;
+          font-size: 0.8rem;
+        }
+
+        .totals-section {
+          padding: 0.75rem 1rem;
+        }
+        .totals-section .total-row {
+          width: 100%;
+          font-size: 0.85rem;
+        }
+        .totals-section .total-row.grand-total {
+          font-size: 1rem;
+        }
+
+        .receipt-footer {
+          padding: 1rem 1rem 1.25rem;
+        }
+        .receipt-footer .thank-you {
+          font-size: 0.9rem;
+        }
+        .receipt-footer .footer-meta {
+          font-size: 0.7rem;
+        }
+        .receipt-footer .footer-meta .dot {
+          margin: 0 0.3rem;
+        }
+
+        .action-buttons {
+          flex-direction: column;
+          align-items: center;
+          gap: 0.75rem;
+        }
+        .btn {
+          min-width: 100%;
+          max-width: 100%;
+          padding: 0.65rem 1.5rem;
+          font-size: 0.85rem;
+        }
+
+        .footer {
+          padding: 1rem 0.75rem;
+          border-radius: 0.5rem;
+        }
+        .footer p {
+          font-size: 0.75rem;
+        }
+      }
+
+      @media (max-width: 380px) {
+        .receipt-header .store-logo {
+          font-size: 1.3rem;
+        }
+        .receipt-header .store-tagline {
+          font-size: 0.55rem;
+          letter-spacing: 1px;
+        }
+        .receipt-header .receipt-title {
+          font-size: 0.6rem;
+          padding: 0.25rem 1rem;
+        }
+        .success-icon {
+          font-size: 1.8rem;
+        }
+
+        .items-table tbody td,
+        .items-table thead th {
+          font-size: 0.7rem;
+          padding: 0.4rem 0.5rem;
+        }
+
+        .totals-section .total-row {
+          font-size: 0.8rem;
+        }
+        .totals-section .total-row.grand-total {
+          font-size: 0.9rem;
+        }
+
+        .nav-links a {
+          font-size: 0.65rem;
+          padding: 0.25rem 0.5rem;
+        }
+        .nav-logo {
+          font-size: 1rem;
+        }
+        .cart-wrapper {
+          font-size: 0.65rem;
+          padding: 0.25rem 0.5rem;
+        }
+        .cart-badge {
+          font-size: 0.45rem;
+          min-width: 0.8rem;
+          height: 0.8rem;
+        }
+
+        .footer p {
+          font-size: 0.7rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ─── NAVIGATION ─── -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <a href="{% url 'product_list' %}" class="nav-logo">Tea<span>Kay</span></a>
+
+        <div class="nav-links">
+          <a href="{% url 'product_list' %}">🏠 Home</a>
+
+          <!-- Cart with Badge -->
+          <a href="{% url 'cart_summary' %}" class="cart-wrapper">
+            🛒 Cart
+            <span class="cart-badge {% if cart_count == 0 %}zero{% endif %}">
+              {{ cart_count }}
+            </span>
+          </a>
+
+          <span class="nav-divider"></span>
+
+          {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}">🚪 Logout</a>
+            <span class="username">👤 {{ user.username }}</span>
+          {% else %}
+            <a href="{% url 'login' %}">🔐 Login</a>
+            <a href="{% url 'signup' %}">✨ Sign Up</a>
+          {% endif %}
+
+          <!-- ─── DARK MODE TOGGLE ─── -->
+          <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+            🌙 Dark
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ─── CONFIRMATION ─── -->
+    <div class="confirmation-container">
+      <div class="receipt-card">
+        <!-- ─── HEADER ─── -->
+        <div class="receipt-header">
+          <span class="success-icon">✅</span>
+          <div class="store-logo">TEA<span>KAY</span></div>
+          <div class="store-tagline">Multimedia Store • Premium Electronics</div>
+          <div class="receipt-title">Order Confirmed</div>
+        </div>
+
+        <!-- ─── STATUS BAR ─── -->
+        <div class="order-status-bar">
+          <span class="order-number">
+            📋 Order #<strong>{{ order.id }}</strong>
+          </span>
+          <span class="status-badge {% if not order.paid %}pending{% endif %}">
+            {% if order.paid %}✅ Paid{% else %}⏳ Pending Payment{% endif %}
+          </span>
+        </div>
+
+        <!-- ─── BODY ─── -->
+        <div class="receipt-body">
+          <!-- Customer Info -->
+          <div class="customer-info">
+            <div class="info-item">
+              <span class="label">Customer</span>
+              <span class="value">{{ order.first_name }} {{ order.last_name }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Email</span>
+              <span class="value">{{ order.email }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Phone</span>
+              <span class="value">{{ order.phone }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Order Date</span>
+              <span class="value">{{ order.created_at|date:"F j, Y • g:i A" }}</span>
+            </div>
+            <div class="info-item full-width">
+              <span class="label">Shipping Address</span>
+              <span class="value">{{ order.address }}</span>
+            </div>
+          </div>
+
+          <!-- Items Table -->
+          <div class="items-table-wrap">
+            <table class="items-table">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th style="text-align:center;">Qty</th>
+                  <th style="text-align:right;">Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in order.items.all %}
+                <tr>
+                  <td class="item-name">{{ item.product.name }}</td>
+                  <td style="text-align:center;" class="item-qty">× {{ item.quantity }}</td>
+                  <td>${{ item.get_cost }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Totals -->
+          <div class="totals-section">
+            <div class="total-row">
+              <span class="label">Subtotal</span>
+              <span class="amount">${{ order.get_total_cost }}</span>
+            </div>
+            <div class="total-row">
+              <span class="label">Shipping</span>
+              <span class="amount">Free</span>
+            </div>
+            <div class="total-row grand-total">
+              <span class="label">Total</span>
+              <span class="amount">${{ order.get_total_cost }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── FOOTER ─── -->
+        <div class="receipt-footer">
+          <div class="thank-you">Thank You for Shopping with <span>Teakay</span>! 🎉</div>
+          <div class="footer-meta">
+            <span>📧 teakaymultimedia@gmail.com</span>
+            <span class="dot">•</span>
+            <span>📞 +233 53 137 2310</span>
+            <span class="dot">•</span>
+            <span>📍 Accra, Ghana</span>
+            <span class="receipt-id">Receipt #{{ order.id }} • {{ order.created_at|date:"Y-m-d" }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── ACTION BUTTONS ─── -->
+      <div class="action-buttons">
+        <a href="{% url 'product_list' %}" class="btn btn-primary">
+          🛍️ Continue Shopping
+        </a>
+        <button onclick="window.print()" class="btn btn-print">
+          🖨️ Print / PDF
+        </button>
+      </div>
+    </div>
+
+    <!-- ─── FOOTER ─── -->
+    <footer class="footer">
+      <p>&copy; 2026 MyStore. All rights reserved.</p>
+      <p>Designed by <span>teakay multimedia</span></p>
+    </footer>
+
+    <!-- ─── DARK MODE SCRIPT ─── -->
+    <script>
+      const themeToggle = document.getElementById('themeToggle');
+
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        themeToggle.textContent = savedTheme === 'dark' ? '☀️ Light' : '🌙 Dark';
+      }
+
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        themeToggle.textContent = newTheme === 'dark' ? '☀️ Light' : '🌙 Dark';
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,753 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout — Teakay Store</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ───────────── CSS VARIABLES ───────────── */
+      :root {
+        --bg: #f1f5f9;
+        --card-bg: #ffffff;
+        --text: #0f172a;
+        --text-secondary: #64748b;
+        --border: #e2e8f0;
+        --hover: #f1f5f9;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.06);
+        --primary: #4f46e5;
+        --primary-hover: #4338ca;
+        --success: #22c55e;
+        --success-hover: #16a34a;
+        --danger: #ef4444;
+        --badge-bg: #ef4444;
+        --badge-text: #ffffff;
+        --footer-bg: #ffffff;
+        --footer-text: #94a3b8;
+        --footer-border: #e2e8f0;
+        --input-bg: #fafbfc;
+        --input-border: #e2e8f0;
+        --input-focus: #4f46e5;
+        --label-color: #0f172a;
+      }
+
+      /* ───────────── DARK MODE ───────────── */
+      [data-theme="dark"] {
+        --bg: #0f172a;
+        --card-bg: #1e293b;
+        --text: #f1f5f9;
+        --text-secondary: #94a3b8;
+        --border: #334155;
+        --hover: #2d3748;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.3);
+        --footer-bg: #1e293b;
+        --footer-text: #64748b;
+        --footer-border: #334155;
+        --badge-bg: #ef4444;
+        --badge-text: #ffffff;
+        --input-bg: #0f172a;
+        --input-border: #334155;
+        --input-focus: #4f46e5;
+        --label-color: #f1f5f9;
+      }
+
+      /* ───────────── RESET ───────────── */
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        transition: background 0.3s ease, color 0.3s ease;
+      }
+
+      /* ───────────── NAVBAR ───────────── */
+      .navbar {
+        background: var(--card-bg);
+        border-bottom: 1px solid var(--border);
+        padding: 0.7rem 1.25rem;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        box-shadow: var(--shadow);
+        transition: background 0.3s ease, border-color 0.3s ease;
+      }
+
+      .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.5rem 0.75rem;
+      }
+
+      .nav-logo {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: var(--text);
+        text-decoration: none;
+        letter-spacing: -0.025em;
+        white-space: nowrap;
+        transition: color 0.3s ease;
+      }
+
+      .nav-logo span {
+        color: var(--primary);
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 0.15rem;
+        flex-wrap: wrap;
+      }
+
+      .nav-links a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.4rem 0.75rem;
+        border-radius: 0.75rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+      }
+
+      .nav-links a:hover {
+        background: var(--hover);
+        color: var(--text);
+      }
+
+      .nav-links .username {
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        padding: 0.4rem 0.5rem;
+        white-space: nowrap;
+      }
+
+      /* ── Cart with Badge ── */
+      .cart-wrapper {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.4rem 0.75rem;
+        border-radius: 0.75rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: all 0.2s ease;
+      }
+
+      .cart-wrapper:hover {
+        background: var(--hover);
+        color: var(--text);
+      }
+
+      .cart-badge {
+        position: absolute;
+        top: -0.2rem;
+        right: -0.15rem;
+        background: var(--badge-bg);
+        color: var(--badge-text);
+        font-size: 0.6rem;
+        font-weight: 700;
+        min-width: 1.1rem;
+        height: 1.1rem;
+        border-radius: 9999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 0.25rem;
+        border: 2px solid var(--card-bg);
+        box-shadow: 0 2px 6px rgba(239, 68, 68, 0.25);
+        animation: pulse 2s ease-in-out infinite;
+        line-height: 1;
+        transition: border-color 0.3s ease;
+      }
+
+      .cart-badge.zero {
+        display: none;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+      }
+
+      .nav-divider {
+        width: 1px;
+        height: 1.5rem;
+        background: var(--border);
+        margin: 0 0.1rem;
+        transition: background 0.3s ease;
+      }
+
+      /* ───────────── DARK MODE TOGGLE ───────────── */
+      .theme-toggle {
+        background: var(--hover);
+        border: 1px solid var(--border);
+        border-radius: 9999px;
+        padding: 0.3rem 0.6rem;
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-family: "Inter", sans-serif;
+        font-weight: 500;
+      }
+
+      .theme-toggle:hover {
+        background: var(--primary);
+        color: #ffffff;
+        border-color: var(--primary);
+      }
+
+      /* ───────────── CHECKOUT CONTAINER ───────────── */
+      .checkout-container {
+        max-width: 700px;
+        margin: 2rem auto;
+        padding: 0 1.25rem;
+        flex: 1;
+        width: 100%;
+      }
+
+      .checkout-card {
+        background: var(--card-bg);
+        padding: 2rem 1.75rem;
+        border-radius: 1.5rem;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-lg);
+        transition: all 0.3s ease;
+      }
+
+      .checkout-card h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text);
+        text-align: center;
+        margin-bottom: 1.75rem;
+        letter-spacing: -0.025em;
+        transition: color 0.3s ease;
+      }
+
+      /* ── Form ── */
+      .form-group {
+        margin-bottom: 1.125rem;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--label-color);
+        margin-bottom: 0.3rem;
+        transition: color 0.3s ease;
+      }
+
+      .form-group label .required {
+        color: var(--danger);
+        margin-left: 0.15rem;
+      }
+
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 0.75rem 0.9rem;
+        border: 1.5px solid var(--input-border);
+        border-radius: 0.75rem;
+        font-size: 0.9rem;
+        font-family: "Inter", sans-serif;
+        transition: all 0.2s ease;
+        background: var(--input-bg);
+        color: var(--text);
+        -webkit-appearance: none;
+        appearance: none;
+      }
+
+      .form-group input::placeholder,
+      .form-group textarea::placeholder {
+        color: #94a3b8;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: var(--input-focus);
+        background: var(--card-bg);
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.06);
+      }
+
+      .form-group input:focus-visible,
+      .form-group textarea:focus-visible {
+        outline: 2px solid var(--input-focus);
+        outline-offset: 1px;
+      }
+
+      .form-group textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+
+      /* ── Buttons ── */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.75rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+        font-family: "Inter", sans-serif;
+        width: 100%;
+      }
+
+      .btn-success {
+        background: var(--success);
+        color: #ffffff;
+      }
+      .btn-success:hover {
+        background: var(--success-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
+      }
+
+      .btn-secondary {
+        background: var(--hover);
+        color: var(--text);
+        border: 1px solid var(--border);
+      }
+      .btn-secondary:hover {
+        background: var(--border);
+        transform: translateY(-2px);
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: #ffffff;
+      }
+      .btn-primary:hover {
+        background: var(--primary-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(79, 70, 229, 0.3);
+      }
+
+      /* ── Payment Footer ── */
+      .payment-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border);
+        transition: border-color 0.3s ease;
+      }
+
+      .payment-footer .secure-badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-bottom: 0.5rem;
+      }
+
+      .payment-footer .secure-badge .paystack-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: var(--success);
+        color: #ffffff;
+        padding: 0.3rem 0.9rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+
+      .payment-footer .secure-badge .ssl-text {
+        color: var(--text-secondary);
+        font-size: 0.75rem;
+        font-weight: 500;
+      }
+
+      .payment-footer p {
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
+      }
+
+      /* ── Messages ── */
+      .messages {
+        max-width: 700px;
+        margin: 1rem auto 0;
+        padding: 0 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .message {
+        padding: 0.7rem 1rem;
+        border-radius: 0.75rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        animation: slideDown 0.35s ease;
+      }
+
+      @keyframes slideDown {
+        0% {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .message-success {
+        background: #ecfdf5;
+        color: #065f46;
+        border: 1px solid #a7f3d0;
+      }
+      [data-theme="dark"] .message-success {
+        background: #0f3d2e;
+        color: #6ee7b7;
+        border-color: #065f46;
+      }
+
+      .message-error {
+        background: #fef2f2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+      }
+      [data-theme="dark"] .message-error {
+        background: #3d1111;
+        color: #fca5a5;
+        border-color: #7f1d1d;
+      }
+
+      .message .dot {
+        font-weight: 700;
+        font-size: 1.2rem;
+        line-height: 1;
+      }
+
+      /* ───────────── FOOTER ───────────── */
+      .footer {
+        background: var(--footer-bg);
+        border-top: 1px solid var(--footer-border);
+        padding: 1.5rem 1.25rem;
+        text-align: center;
+        margin-top: 2rem;
+        transition: all 0.3s ease;
+      }
+
+      .footer p {
+        color: var(--footer-text);
+        font-size: 0.85rem;
+        font-weight: 400;
+        letter-spacing: 0.01em;
+        margin: 0.25rem 0;
+        transition: color 0.3s ease;
+      }
+
+      .footer p span {
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      /* ───────────── RESPONSIVE ───────────── */
+      @media (max-width: 640px) {
+        .navbar {
+          padding: 0.5rem 0.75rem;
+        }
+        .nav-container {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0.4rem;
+        }
+        .nav-logo {
+          text-align: center;
+          font-size: 1.1rem;
+        }
+        .nav-links {
+          justify-content: center;
+          gap: 0.1rem;
+          flex-wrap: wrap;
+        }
+        .nav-links a {
+          font-size: 0.75rem;
+          padding: 0.3rem 0.6rem;
+        }
+        .nav-links .username {
+          font-size: 0.7rem;
+          padding: 0.3rem 0.4rem;
+        }
+        .cart-wrapper {
+          font-size: 0.75rem;
+          padding: 0.3rem 0.6rem;
+        }
+        .cart-badge {
+          font-size: 0.5rem;
+          min-width: 0.9rem;
+          height: 0.9rem;
+          top: -0.15rem;
+          right: -0.1rem;
+        }
+        .nav-divider {
+          display: none;
+        }
+        .theme-toggle {
+          font-size: 0.7rem;
+          padding: 0.2rem 0.5rem;
+        }
+
+        .checkout-container {
+          padding: 0 0.75rem;
+          margin: 1rem auto;
+        }
+        .checkout-card {
+          padding: 1.25rem 1rem;
+          border-radius: 1.25rem;
+        }
+        .checkout-card h2 {
+          font-size: 1.25rem;
+        }
+        .form-row {
+          grid-template-columns: 1fr;
+          gap: 0;
+        }
+        .form-group input,
+        .form-group textarea {
+          font-size: 0.85rem;
+          padding: 0.65rem 0.8rem;
+        }
+        .btn {
+          font-size: 0.85rem;
+          padding: 0.65rem 1.2rem;
+        }
+        .messages {
+          padding: 0 0.75rem;
+          margin-top: 0.75rem;
+        }
+        .message {
+          font-size: 0.8rem;
+          padding: 0.6rem 0.8rem;
+        }
+        .payment-footer .secure-badge .paystack-badge {
+          font-size: 0.7rem;
+          padding: 0.2rem 0.7rem;
+        }
+        .payment-footer .secure-badge .ssl-text {
+          font-size: 0.7rem;
+        }
+        .payment-footer p {
+          font-size: 0.75rem;
+        }
+        .footer {
+          padding: 1rem 0.75rem;
+        }
+        .footer p {
+          font-size: 0.75rem;
+        }
+      }
+
+      @media (max-width: 380px) {
+        .nav-links a {
+          font-size: 0.65rem;
+          padding: 0.25rem 0.5rem;
+        }
+        .nav-logo {
+          font-size: 1rem;
+        }
+        .cart-wrapper {
+          font-size: 0.65rem;
+          padding: 0.25rem 0.5rem;
+        }
+        .cart-badge {
+          font-size: 0.45rem;
+          min-width: 0.8rem;
+          height: 0.8rem;
+        }
+        .checkout-card {
+          padding: 1rem 0.75rem;
+        }
+        .checkout-card h2 {
+          font-size: 1.1rem;
+        }
+        .footer p {
+          font-size: 0.7rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ─── NAVIGATION ─── -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <a href="{% url 'product_list' %}" class="nav-logo">Tea<span>Kay</span></a>
+
+        <div class="nav-links">
+          <a href="{% url 'product_list' %}">🏠 Home</a>
+
+          <!-- Cart with Badge -->
+          <a href="{% url 'cart_summary' %}" class="cart-wrapper">
+            🛒 Cart
+            <span class="cart-badge {% if cart_count == 0 %}zero{% endif %}">
+              {{ cart_count }}
+            </span>
+          </a>
+
+          <span class="nav-divider"></span>
+
+          {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}">🚪 Logout</a>
+            <span class="username">👤 {{ user.username }}</span>
+          {% else %}
+            <a href="{% url 'login' %}">🔐 Login</a>
+            <a href="{% url 'signup' %}">✨ Sign Up</a>
+          {% endif %}
+
+          <!-- ─── DARK MODE TOGGLE ─── -->
+          <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+            🌙 Dark
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ─── MESSAGES ─── -->
+    {% if messages %}
+    <div class="messages">
+      {% for message in messages %}
+      <div class="message message-{{ message.tags }}">
+        <span class="dot">•</span> {{ message }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- ─── CHECKOUT ─── -->
+    <div class="checkout-container">
+      <div class="checkout-card">
+        <h2>📦 Shipping Information</h2>
+
+        <form method="POST" novalidate>
+          {% csrf_token %}
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>First Name <span class="required">*</span></label>
+              <input type="text" name="first_name" placeholder="Enter first name" required />
+            </div>
+
+            <div class="form-group">
+              <label>Last Name <span class="required">*</span></label>
+              <input type="text" name="last_name" placeholder="Enter last name" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Email Address <span class="required">*</span></label>
+            <input type="email" name="email" placeholder="you@example.com" required />
+          </div>
+
+          <div class="form-group">
+            <label>Shipping Address <span class="required">*</span></label>
+            <textarea name="address" rows="3" placeholder="Enter your full shipping address" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Phone Number <span class="required">*</span></label>
+            <input type="tel" name="phone" placeholder="+233 53 137 2310" required />
+          </div>
+
+          <button type="submit" class="btn btn-success">
+            ✅ Place Order
+          </button>
+        </form>
+
+        <!-- ─── PAYMENT FOOTER ─── -->
+        <div class="payment-footer">
+          <div class="secure-badge">
+            <span class="paystack-badge"> <img src="store\images\paystack.png" alt="Paystack" style="width: 20px; height: 20px;"> Secured by Paystack</span>
+            <span class="ssl-text">  </span> 256-bit SSL encrypted</span>
+          </div>
+          <p>You will be redirected to Paystack to complete your payment securely.</p>
+        </div>
+
+        <a href="{% url 'cart_summary' %}" class="btn btn-secondary" style="margin-top: 0.75rem;">
+          ← Back to Cart
+        </a>
+      </div>
+    </div>
+
+    <!-- ─── FOOTER ─── -->
+    <footer class="footer">
+      <p>&copy; 2026 MyStore. All rights reserved.</p>
+      <p>Designed by <span>teakay multimedia</span></p>
+    </footer>
+
+    <!-- ─── DARK MODE SCRIPT ─── -->
+    <script>
+      const themeToggle = document.getElementById('themeToggle');
+
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        themeToggle.textContent = savedTheme === 'dark' ? '☀️ Light' : '🌙 Dark';
+      }
+
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        themeToggle.textContent = newTheme === 'dark' ? '☀️ Light' : '🌙 Dark';
+      });
+    </script>
+  </body>
+</html>
