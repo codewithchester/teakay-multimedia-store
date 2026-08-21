@@ -9,7 +9,10 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+# ─── ADMIN CUSTOMIZATION ───
+ADMIN_SITE_HEADER = "Teakay Store Admin"
+ADMIN_SITE_TITLE = "Teakay Store"
+ADMIN_INDEX_TITLE = "Welcome to Teakay Store"
 from pathlib import Path
 
 import os
