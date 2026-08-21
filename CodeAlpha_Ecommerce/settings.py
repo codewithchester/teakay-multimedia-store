@@ -67,15 +67,78 @@ INSTALLED_APPS = [
     'accounts',
 ]
 
-# Jazzmin settings
+# ─── JAZZMIN ADMIN THEME ───
 JAZZMIN_SETTINGS = {
-    "site_title": "MyStore Admin",
-    "site_header": "MyStore",
-    "site_brand": "🛍️ MyStore",
-    "welcome_sign": "Welcome to MyStore Admin Panel",
-    "copyright": "MyStore Ltd",
+    "site_title": "Teakay Store Admin",
+    "site_header": "Teakay Store",
+    "site_brand": "🛍️ Teakay Store",
+    "welcome_sign": "Welcome to Teakay Store Admin Panel",
+    "copyright": "Teakay Multimedia",
+    "search_model": "store.Product",
     "show_sidebar": True,
     "navigation_expanded": True,
+    "hide_apps": [],
+    "hide_models": [],
+    "order_with_respect_to": ["store", "accounts", "cart"],
+    "custom_links": {
+        "store": [{
+            "name": "📊 Dashboard",
+            "url": "/admin/dashboard/",
+            "icon": "fas fa-chart-bar",
+            "permissions": ["store.view_order"]
+        }]
+    },
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "store.Product": "fas fa-box",
+        "store.Order": "fas fa-shopping-cart",
+        "store.OrderItem": "fas fa-receipt",
+        "cart.Cart": "fas fa-shopping-bag",
+        "accounts.Account": "fas fa-user-circle",
+    },
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
+    "related_modal_active": True,
+    "show_ui_builder": False,
+    "changeform_format": "horizontal_tabs",
+    "changeform_format_overrides": {
+        "auth.user": "collapsible",
+        "store.order": "vertical_tabs",
+    },
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": "navbar-primary",
+    "accent": "accent-primary",
+    "navbar": "navbar-white navbar-light",
+    "no_navbar_border": False,
+    "navbar_fixed": True,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": True,
+    "sidebar": "sidebar-dark-primary",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": False,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": False,
+    "theme": "default",
+    "dark_mode_theme": None,
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success",
+    },
 }
 
 MIDDLEWARE = [
