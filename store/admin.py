@@ -16,14 +16,10 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ('name', 'description')
     ordering = ('-created_at',)
     
-    # Group fields for better UI
+    # Group fields for better UI (REMOVED created_at from fieldsets)
     fieldsets = (
         ('Product Information', {
             'fields': ('name', 'description', 'price', 'image')
-        }),
-        ('Timestamps', {
-            'fields': ('created_at',),
-            'classes': ('collapse',)
         }),
     )
 
@@ -47,9 +43,8 @@ class OrderAdmin(admin.ModelAdmin):
     list_filter = ('paid', 'created_at')
     search_fields = ('first_name', 'last_name', 'email')
     ordering = ('-created_at',)
-    exclude = ('created_at',)
-
-    # Group fields for better UI
+    
+    # Group fields for better UI (REMOVED created_at from fieldsets)
     fieldsets = (
         ('Customer Information', {
             'fields': ('first_name', 'last_name', 'email', 'phone', 'address')
@@ -58,12 +53,7 @@ class OrderAdmin(admin.ModelAdmin):
             'fields': ('paid',),
             'classes': ('wide',)
         }),
-        ('Timestamps', {
-            'fields': ('created_at',),
-            'classes': ('collapse',)
-        }),
     )
-    
     
     # Custom method
     def customer_name(self, obj):

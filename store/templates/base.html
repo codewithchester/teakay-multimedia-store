@@ -1,12 +1,42 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}MyStore{% endblock %}</title>
+    
+    <title>{% block title %}Teakay Store - Shop the Best Products{% endblock %}</title>
+    
+    <link rel="icon" type="image/x-icon" href="{% static 'store/images/favicon.ico' %}">
+        
+
+
+    <meta name="theme-color" content="#667eea">
+    
     <link rel="stylesheet" href="{% static 'store/css/style.css' %}">
     <style>
+        /* Hamburger Menu Styles */
+        .hamburger {
+            display: none;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 2em;
+            cursor: pointer;
+            padding: 5px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .hamburger.active {
+            transform: rotate(90deg);
+        }
+
         /* Cart Badge Styles */
         .cart-icon-wrapper {
             position: relative;
@@ -51,7 +81,7 @@
             50% { transform: scale(1.15); }
         }
 
-        /* Navbar styles (if not in style.css) */
+        /* Navbar */
         .navbar {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 15px 0;
@@ -85,6 +115,7 @@
             transition: transform 0.3s;
         }
 
+        /* Desktop Nav Links */
         .nav-links {
             display: flex;
             gap: 10px;
@@ -129,33 +160,13 @@
         }
 
         @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
-        .message-success {
-            background: #d4edda;
-            color: #155724;
-            border-left: 5px solid #28a745;
-        }
-
-        .message-error {
-            background: #f8d7da;
-            color: #721c24;
-            border-left: 5px solid #dc3545;
-        }
-
-        .message-warning {
-            background: #fff3cd;
-            color: #856404;
-            border-left: 5px solid #ffc107;
-        }
+        .message-success { background: #d4edda; color: #155724; border-left: 5px solid #28a745; }
+        .message-error { background: #f8d7da; color: #721c24; border-left: 5px solid #dc3545; }
+        .message-warning { background: #fff3cd; color: #856404; border-left: 5px solid #ffc107; }
 
         /* Footer */
         .footer {
@@ -171,19 +182,53 @@
             opacity: 0.8;
         }
 
-        /* Responsive */
+        /* Mobile Responsive */
         @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+                order: 3;
+            }
+
             .nav-container {
-                flex-direction: column;
-                gap: 15px;
+                flex-wrap: wrap;
             }
-            
-            .nav-links {
-                justify-content: center;
-            }
-            
+
             .logo {
+                order: 1;
                 font-size: 1.5em;
+            }
+
+            .nav-links {
+                display: none;
+                width: 100%;
+                order: 4;
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 20px 0;
+                gap: 15px;
+                border-top: 1px solid rgba(255, 255, 255, 0.3);
+                margin-top: 15px;
+                animation: fadeInDown 0.4s ease;
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .nav-links a {
+                width: 100%;
+                padding: 10px 15px;
+                border-radius: 8px;
+            }
+
+            .nav-links .username {
+                width: 100%;
+                padding: 10px 15px;
+            }
+
+            @keyframes fadeInDown {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
             }
         }
     </style>
@@ -193,8 +238,16 @@
     <!-- ===== NAVIGATION ===== -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="{% url 'product_list' %}" class="logo">🛍️ MyStore</a>
-            <div class="nav-links">
+            <!-- Logo -->
+            <a href="{% url 'product_list' %}" class="logo">🛍️ Teakay Store</a>
+
+            <!-- Hamburger Menu Button -->
+            <button class="hamburger" id="hamburgerBtn" onclick="toggleMenu()">
+                ☰
+            </button>
+
+            <!-- Nav Links (Desktop & Mobile) -->
+            <div class="nav-links" id="navLinks">
                 <a href="{% url 'product_list' %}">Home</a>
 
                 <!-- Cart with Badge -->
@@ -228,19 +281,31 @@
     <!-- ===== CONTENT ===== -->
     {% block content %}
     {% endblock %}
+
     <!--Start of Tawk.to Script-->
-<script type="text/javascript">
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/6a88530f42fdf13442d9444b/1k0i88uaa';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
-})();
-</script>
-<!--End of Tawk.to Script-->
+    <script type="text/javascript">
+        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+        (function(){
+            var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+            s1.async=true;
+            s1.src='https://embed.tawk.to/6a88530f42fdf13442d9444b/1k0i88uaa';
+            s1.charset='UTF-8';
+            s1.setAttribute('crossorigin','*');
+            s0.parentNode.insertBefore(s1,s0);
+        })();
+    </script>
+    <!--End of Tawk.to Script-->
+
+    <!-- ===== HAMBURGER MENU TOGGLE SCRIPT ===== -->
+    <script>
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            const hamburger = document.getElementById('hamburgerBtn');
+            
+            navLinks.classList.toggle('open');
+            hamburger.classList.toggle('active');
+        }
+    </script>
 
     <!-- ===== FOOTER ===== -->
     <footer class="footer">

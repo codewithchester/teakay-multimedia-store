@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Teakay Store — Premium Electronics</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'store/images/favicon.ico' %}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
     <style>
         /* ═══════════════════════════════════════════════
@@ -228,6 +229,33 @@
             white-space: nowrap;
         }
 
+        /* ═══════════════════════════════════════════════
+           HAMBURGER MENU
+           ═══════════════════════════════════════════════ */
+        .hamburger {
+            display: none;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 1.8rem;
+            cursor: pointer;
+            padding: 0.2rem 0.5rem;
+            border-radius: var(--radius-sm);
+            transition: all 0.3s ease;
+            z-index: 110;
+        }
+
+        .hamburger:hover {
+            background: var(--hover);
+        }
+
+        .hamburger.active {
+            transform: rotate(90deg);
+        }
+
+        /* ═══════════════════════════════════════════════
+           CART
+           ═══════════════════════════════════════════════ */
         .cart-wrapper {
             position: relative;
             display: inline-flex;
@@ -990,7 +1018,7 @@
         }
 
         /* ═══════════════════════════════════════════════
-           RESPONSIVE
+           RESPONSIVE WITH HAMBURGER
            ═══════════════════════════════════════════════ */
         @media (max-width: 768px) {
             .product-grid {
@@ -1007,53 +1035,78 @@
             .messages {
                 padding: 0 1rem;
             }
+
+            /* ── HAMBURGER MENU STARTS HERE ── */
+            .hamburger {
+                display: block;
+                order: 3;
+                margin-left: auto;
+            }
+
+            .nav-container {
+                flex-wrap: wrap;
+            }
+
+            .nav-logo {
+                order: 1;
+            }
+
+            .nav-links {
+                display: none;
+                width: 100%;
+                order: 4;
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1rem 0;
+                gap: 0.5rem;
+                border-top: 1px solid var(--border);
+                margin-top: 0.5rem;
+                animation: fadeInDown 0.4s ease;
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .nav-links a {
+                width: 100%;
+                padding: 0.6rem 0.75rem;
+                border-radius: var(--radius-sm);
+            }
+
+            .nav-links .username {
+                width: 100%;
+                padding: 0.6rem 0.75rem;
+            }
+
+            .nav-divider {
+                width: 100%;
+                height: 1px;
+                margin: 0.5rem 0;
+            }
+
+            .theme-toggle {
+                width: 100%;
+                justify-content: center;
+                margin-top: 0.5rem;
+            }
+
+            @keyframes fadeInDown {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
         }
 
         @media (max-width: 480px) {
             .navbar {
                 padding: 0.5rem 0.75rem;
             }
-            .nav-container {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 0.4rem;
-            }
             .nav-logo {
-                text-align: center;
                 font-size: 1.1rem;
             }
-            .nav-links {
-                justify-content: center;
-                gap: 0.1rem;
-                flex-wrap: wrap;
-            }
             .nav-links a {
-                font-size: 0.75rem;
-                padding: 0.25rem 0.5rem;
+                font-size: 0.85rem;
             }
-            .nav-links .username {
-                font-size: 0.7rem;
-                padding: 0.25rem 0.4rem;
-            }
-            .cart-wrapper {
-                font-size: 0.75rem;
-                padding: 0.25rem 0.5rem;
-            }
-            .cart-badge {
-                font-size: 0.5rem;
-                min-width: 0.9rem;
-                height: 0.9rem;
-                top: -0.15rem;
-                right: -0.1rem;
-            }
-            .nav-divider {
-                display: none;
-            }
-            .theme-toggle {
-                font-size: 0.7rem;
-                padding: 0.2rem 0.5rem;
-            }
-
             .product-grid {
                 grid-template-columns: 1fr 1fr;
                 gap: 0.6rem;
@@ -1143,7 +1196,11 @@
         <div class="nav-container">
             <a href="{% url 'product_list' %}" class="nav-logo">Tea<span>Kay</span></a>
 
-            <div class="nav-links">
+            <button class="hamburger" id="hamburgerBtn" onclick="toggleMenu()" aria-label="Toggle menu">
+                ☰
+            </button>
+
+            <div class="nav-links" id="navLinks">
                 <a href="{% url 'product_list' %}">🏠 Home</a>
 
                 <a href="{% url 'cart_summary' %}" class="cart-wrapper">
@@ -1179,108 +1236,69 @@
     </div>
     {% endif %}
 
-    <!-- ─── HERO SLIDER ─── -->
+    <!-- ─── HERO SLIDER (FIXED) ─── -->
     <div class="hero-slider" id="heroSlider">
         <div class="slider-track" id="sliderTrack">
-            {% with products as all_products %}
-                {% if all_products %}
-                    {% for product in all_products %}
-                    <div class="slide" style="background: linear-gradient(135deg, {% cycle '#4f46e5' '#0ea5e9' '#f59e0b' '#6366f1' '#ec4899' '#14b8a6' %} 0%, {% cycle '#7c3aed' '#06b6d4' '#ef4444' '#8b5cf6' '#f43f5e' '#0d9488' %} 100%);">
-                        <div class="slide-content">
-                            <span class="tag">
-                                {% if forloop.first %}🔥 Bestseller
-                                {% elif forloop.last %}✨ New Arrival
-                                {% else %}⚡ Limited Offer{% endif %}
-                            </span>
-                            <h2>{{ product.name|truncatechars:30 }}</h2>
-                            <p>{{ product.description|truncatechars:80 }}</p>
-                            <div class="slide-price">${{ product.price }}</div>
-                            <a href="{% url 'product_detail' product.id %}" class="btn-slide">View Details →</a>
-                        </div>
-                        <div class="slide-image">
-                            {% if product.image %}
-                                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="slide-product-img" />
-                            {% else %}
-                                <span class="slide-emoji">💻</span>
-                            {% endif %}
-                        </div>
+            {% if products %}
+                {% for product in products %}
+                <div class="slide" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);">
+                    <div class="slide-content">
+                        <span class="tag">
+                            {% if forloop.first %}🔥 Bestseller
+                            {% elif forloop.last %}✨ New Arrival
+                            {% else %}⚡ Limited Offer{% endif %}
+                        </span>
+                        <h2>{{ product.name|truncatechars:30 }}</h2>
+                        <p>{{ product.description|truncatechars:80 }}</p>
+                        <div class="slide-price">${{ product.price }}</div>
+                        <a href="{% url 'product_detail' product.id %}" class="btn-slide">View Details →</a>
                     </div>
-                    {% endfor %}
-
-                    {# Add placeholder slides if fewer than 3 #}
-                    {% with all_products|length as product_count %}
-                        {% if product_count == 1 %}
-                            <div class="slide" style="background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);">
-                                <div class="slide-content">
-                                    <span class="tag">🌟 Coming Soon</span>
-                                    <h2>More Products</h2>
-                                    <p>We're adding new products every week. Stay tuned!</p>
-                                    <a href="{% url 'product_list' %}" class="btn-slide">Shop All →</a>
-                                </div>
-                                <div class="slide-image"><span class="slide-emoji">🛍️</span></div>
-                            </div>
-                            <div class="slide" style="background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);">
-                                <div class="slide-content">
-                                    <span class="tag">🎉 Special Offer</span>
-                                    <h2>Premium Quality</h2>
-                                    <p>Discover our curated collection of premium electronics.</p>
-                                    <a href="{% url 'product_list' %}" class="btn-slide">Explore →</a>
-                                </div>
-                                <div class="slide-image"><span class="slide-emoji">⚡</span></div>
-                            </div>
-                        {% elif product_count == 2 %}
-                            <div class="slide" style="background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);">
-                                <div class="slide-content">
-                                    <span class="tag">🎉 New Arrivals</span>
-                                    <h2>Fresh Collection</h2>
-                                    <p>Check out our latest products and find your next favorite device.</p>
-                                    <a href="{% url 'product_list' %}" class="btn-slide">View All →</a>
-                                </div>
-                                <div class="slide-image"><span class="slide-emoji">📦</span></div>
-                            </div>
+                    <div class="slide-image">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="slide-product-img" />
+                        {% else %}
+                            <span class="slide-emoji">💻</span>
                         {% endif %}
-                    {% endwith %}
-
-                {% else %}
-                    <!-- Fallback slides when no products -->
-                    <div class="slide" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);">
-                        <div class="slide-content">
-                            <span class="tag">🔥 Welcome</span>
-                            <h2>Premium Electronics</h2>
-                            <p>Discover our curated collection of high-quality laptops, gadgets, and accessories.</p>
-                            <a href="#" class="btn-slide">Shop Now →</a>
-                        </div>
-                        <div class="slide-image"><span class="slide-emoji">💻</span></div>
                     </div>
-                    <div class="slide" style="background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);">
-                        <div class="slide-content">
-                            <span class="tag">🌟 Coming Soon</span>
-                            <h2>Amazing Deals</h2>
-                            <p>We're launching soon with incredible products at unbeatable prices.</p>
-                            <a href="#" class="btn-slide">Learn More →</a>
-                        </div>
-                        <div class="slide-image"><span class="slide-emoji">🛍️</span></div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- Fallback when no products -->
+                <div class="slide" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);">
+                    <div class="slide-content">
+                        <span class="tag">🔥 Welcome</span>
+                        <h2>Premium Electronics</h2>
+                        <p>Discover our curated collection of high-quality laptops, gadgets, and accessories.</p>
+                        <a href="#" class="btn-slide">Shop Now →</a>
                     </div>
-                    <div class="slide" style="background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);">
-                        <div class="slide-content">
-                            <span class="tag">🎉 Get Ready</span>
-                            <h2>Stay Tuned</h2>
-                            <p>Be the first to know when our store goes live with premium products.</p>
-                            <a href="#" class="btn-slide">Subscribe →</a>
-                        </div>
-                        <div class="slide-image"><span class="slide-emoji">🚀</span></div>
+                    <div class="slide-image"><span class="slide-emoji">💻</span></div>
+                </div>
+                <div class="slide" style="background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);">
+                    <div class="slide-content">
+                        <span class="tag">🌟 Coming Soon</span>
+                        <h2>Amazing Deals</h2>
+                        <p>We're launching soon with incredible products at unbeatable prices.</p>
+                        <a href="#" class="btn-slide">Learn More →</a>
                     </div>
-                {% endif %}
-            {% endwith %}
+                    <div class="slide-image"><span class="slide-emoji">🛍️</span></div>
+                </div>
+                <div class="slide" style="background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);">
+                    <div class="slide-content">
+                        <span class="tag">🎉 Get Ready</span>
+                        <h2>Stay Tuned</h2>
+                        <p>Be the first to know when our store goes live with premium products.</p>
+                        <a href="#" class="btn-slide">Subscribe →</a>
+                    </div>
+                    <div class="slide-image"><span class="slide-emoji">🚀</span></div>
+                </div>
+            {% endif %}
         </div>
 
-        <!-- Slider Controls -->
         <div class="slider-controls">
             <button id="prevSlide" aria-label="Previous slide">‹</button>
             <button id="nextSlide" aria-label="Next slide">›</button>
         </div>
 
-        <!-- Slider Dots -->
         <div class="slider-dots" id="sliderDots"></div>
     </div>
 
@@ -1328,19 +1346,20 @@
             {% endfor %}
         </div>
     </div>
+
     <!--Start of Tawk.to Script-->
-<script type="text/javascript">
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/6a88530f42fdf13442d9444b/1k0i88uaa';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
-})();
-</script>
-<!--End of Tawk.to Script-->
+    <script type="text/javascript">
+        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+        (function(){
+            var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+            s1.async=true;
+            s1.src='https://embed.tawk.to/6a88530f42fdf13442d9444b/1k0i88uaa';
+            s1.charset='UTF-8';
+            s1.setAttribute('crossorigin','*');
+            s0.parentNode.insertBefore(s1,s0);
+        })();
+    </script>
+    <!--End of Tawk.to Script-->
 
     <!-- ─── FOOTER ─── -->
     <footer class="footer">
@@ -1350,6 +1369,17 @@ s0.parentNode.insertBefore(s1,s0);
 
     <!-- ─── JAVASCRIPT ─── -->
     <script>
+        // ═══════════════════════════════════════════════
+        // HAMBURGER MENU TOGGLE
+        // ═══════════════════════════════════════════════
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            const hamburger = document.getElementById('hamburgerBtn');
+            
+            navLinks.classList.toggle('open');
+            hamburger.classList.toggle('active');
+        }
+
         // ═══════════════════════════════════════════════
         // DARK MODE TOGGLE
         // ═══════════════════════════════════════════════
@@ -1377,7 +1407,6 @@ s0.parentNode.insertBefore(s1,s0);
 
             if (totalSlides === 0) return;
 
-            // Create dots dynamically
             const dotsContainer = document.getElementById('sliderDots');
             dotsContainer.innerHTML = '';
             for (let i = 0; i < totalSlides; i++) {
@@ -1389,10 +1418,7 @@ s0.parentNode.insertBefore(s1,s0);
             }
             const dots = dotsContainer.querySelectorAll('.dot');
 
-            // Calculate slide width
             const slideWidth = 100 / totalSlides;
-
-            // Set track width and slide widths
             track.style.width = totalSlides * 100 + '%';
             slides.forEach(slide => {
                 slide.style.width = slideWidth + '%';
@@ -1409,116 +1435,59 @@ s0.parentNode.insertBefore(s1,s0);
                 if (index >= totalSlides) index = 0;
 
                 currentSlide = index;
-
                 if (instant) {
                     track.style.transition = 'none';
                 } else {
                     track.style.transition = 'transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
                     isTransitioning = true;
                 }
-
                 track.style.transform = 'translateX(-' + (currentSlide * slideWidth) + '%)';
-
-                // Update dots
                 dots.forEach(d => d.classList.remove('active'));
                 if (dots[currentSlide]) dots[currentSlide].classList.add('active');
-
                 if (!instant) {
-                    setTimeout(() => {
-                        isTransitioning = false;
-                    }, 700);
+                    setTimeout(() => { isTransitioning = false; }, 700);
                 }
             }
 
-            function nextSlide() {
-                if (isTransitioning) return;
-                goToSlide(currentSlide + 1);
-            }
+            function nextSlide() { if (!isTransitioning) goToSlide(currentSlide + 1); }
+            function prevSlide() { if (!isTransitioning) goToSlide(currentSlide - 1); }
+            function startAutoSlide() { if (autoSlide) clearInterval(autoSlide); autoSlide = setInterval(nextSlide, slideInterval); }
+            function stopAutoSlide() { if (autoSlide) { clearInterval(autoSlide); autoSlide = null; } }
 
-            function prevSlide() {
-                if (isTransitioning) return;
-                goToSlide(currentSlide - 1);
-            }
-
-            function startAutoSlide() {
-                if (autoSlide) clearInterval(autoSlide);
-                autoSlide = setInterval(nextSlide, slideInterval);
-            }
-
-            function stopAutoSlide() {
-                if (autoSlide) {
-                    clearInterval(autoSlide);
-                    autoSlide = null;
-                }
-            }
-
-            // ─── Event Listeners ───
-            document.getElementById('nextSlide').addEventListener('click', () => {
-                stopAutoSlide();
-                nextSlide();
-                startAutoSlide();
-            });
-
-            document.getElementById('prevSlide').addEventListener('click', () => {
-                stopAutoSlide();
-                prevSlide();
-                startAutoSlide();
-            });
+            document.getElementById('nextSlide').addEventListener('click', () => { stopAutoSlide(); nextSlide(); startAutoSlide(); });
+            document.getElementById('prevSlide').addEventListener('click', () => { stopAutoSlide(); prevSlide(); startAutoSlide(); });
 
             dots.forEach((dot, index) => {
-                dot.addEventListener('click', () => {
-                    stopAutoSlide();
-                    goToSlide(index);
-                    startAutoSlide();
-                });
+                dot.addEventListener('click', () => { stopAutoSlide(); goToSlide(index); startAutoSlide(); });
             });
 
-            // Pause on hover
             const slider = document.getElementById('heroSlider');
             slider.addEventListener('mouseenter', stopAutoSlide);
             slider.addEventListener('mouseleave', startAutoSlide);
 
-            // Touch/swipe support
             let touchStartX = 0;
             let touchEndX = 0;
-
-            slider.addEventListener('touchstart', (e) => {
-                touchStartX = e.changedTouches[0].screenX;
-                stopAutoSlide();
-            }, { passive: true });
-
+            slider.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; stopAutoSlide(); }, { passive: true });
             slider.addEventListener('touchend', (e) => {
                 touchEndX = e.changedTouches[0].screenX;
                 const diff = touchStartX - touchEndX;
-                if (Math.abs(diff) > 30) {
-                    if (diff > 0) {
-                        nextSlide();
-                    } else {
-                        prevSlide();
-                    }
-                }
+                if (Math.abs(diff) > 30) { if (diff > 0) nextSlide(); else prevSlide(); }
                 startAutoSlide();
             }, { passive: true });
 
-            // ─── Initialize ───
             goToSlide(0, true);
             startAutoSlide();
 
-            // Handle window resize
             let resizeTimeout;
             window.addEventListener('resize', () => {
                 clearTimeout(resizeTimeout);
                 resizeTimeout = setTimeout(() => {
-                    // Recalculate slide width on resize
                     const newSlideWidth = 100 / totalSlides;
-                    slides.forEach(slide => {
-                        slide.style.width = newSlideWidth + '%';
-                    });
+                    slides.forEach(slide => { slide.style.width = newSlideWidth + '%'; });
                     track.style.width = totalSlides * 100 + '%';
                     goToSlide(currentSlide, true);
                 }, 100);
             });
-
         })();
     </script>
 </body>
