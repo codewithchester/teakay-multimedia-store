@@ -3,6 +3,7 @@ from . import views
 from .admin_dashboard import admin_dashboard
 from django.contrib.sitemaps.views import sitemap
 from .sitemaps import ProductSitemap
+from django.views.generic import TemplateView
 
 sitemaps = {
     'products': ProductSitemap,
@@ -20,6 +21,10 @@ urlpatterns = [
 
     # Sitemap
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+
+    #robots
+    path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
+
 
 
 ]

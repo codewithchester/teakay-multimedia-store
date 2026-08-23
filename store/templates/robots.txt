@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /cart/
+Sitemap: https://teakay-multimedia-store.onrender.com/sitemap.xml
