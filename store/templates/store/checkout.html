@@ -5,6 +5,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Checkout — Teakay Store</title>
+    
+    <!-- Favicon (if you have it) -->
+    <link rel="icon" type="image/png" href="{% static 'store/images/favicon.png' %}">
+    
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
       rel="stylesheet"
@@ -74,6 +78,28 @@
         display: flex;
         flex-direction: column;
         transition: background 0.3s ease, color 0.3s ease;
+      }
+
+      /* ───────────── HAMBURGER MENU ───────────── */
+      .hamburger {
+        display: none;
+        background: transparent;
+        border: none;
+        color: var(--text);
+        font-size: 1.8rem;
+        cursor: pointer;
+        padding: 0.2rem 0.5rem;
+        border-radius: 0.75rem;
+        transition: all 0.3s ease;
+        z-index: 110;
+      }
+
+      .hamburger:hover {
+        background: var(--hover);
+      }
+
+      .hamburger.active {
+        transform: rotate(90deg);
       }
 
       /* ───────────── NAVBAR ───────────── */
@@ -499,52 +525,70 @@
         font-weight: 600;
       }
 
-      /* ───────────── RESPONSIVE ───────────── */
+      /* ───────────── RESPONSIVE (HAMBURGER) ───────────── */
+      @media (max-width: 768px) {
+        .hamburger {
+          display: block;
+          margin-left: auto;
+        }
+
+        .nav-container {
+          flex-wrap: wrap;
+        }
+
+        .nav-logo {
+          order: 1;
+        }
+
+        .nav-links {
+          display: none;
+          width: 100%;
+          order: 3;
+          flex-direction: column;
+          align-items: flex-start;
+          padding: 1rem 0;
+          gap: 0.5rem;
+          border-top: 1px solid var(--border);
+          margin-top: 0.5rem;
+          animation: fadeInDown 0.4s ease;
+        }
+
+        .nav-links.open {
+          display: flex;
+        }
+
+        .nav-links a {
+          width: 100%;
+          padding: 0.6rem 0.75rem;
+        }
+
+        .nav-links .username {
+          width: 100%;
+          padding: 0.6rem 0.75rem;
+        }
+
+        .nav-divider {
+          width: 100%;
+          height: 1px;
+          margin: 0.5rem 0;
+        }
+
+        .theme-toggle {
+          width: 100%;
+          justify-content: center;
+          margin-top: 0.5rem;
+        }
+
+        @keyframes fadeInDown {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      }
+
       @media (max-width: 640px) {
         .navbar {
           padding: 0.5rem 0.75rem;
         }
-        .nav-container {
-          flex-direction: column;
-          align-items: stretch;
-          gap: 0.4rem;
-        }
-        .nav-logo {
-          text-align: center;
-          font-size: 1.1rem;
-        }
-        .nav-links {
-          justify-content: center;
-          gap: 0.1rem;
-          flex-wrap: wrap;
-        }
-        .nav-links a {
-          font-size: 0.75rem;
-          padding: 0.3rem 0.6rem;
-        }
-        .nav-links .username {
-          font-size: 0.7rem;
-          padding: 0.3rem 0.4rem;
-        }
-        .cart-wrapper {
-          font-size: 0.75rem;
-          padding: 0.3rem 0.6rem;
-        }
-        .cart-badge {
-          font-size: 0.5rem;
-          min-width: 0.9rem;
-          height: 0.9rem;
-          top: -0.15rem;
-          right: -0.1rem;
-        }
-        .nav-divider {
-          display: none;
-        }
-        .theme-toggle {
-          font-size: 0.7rem;
-          padding: 0.2rem 0.5rem;
-        }
-
         .checkout-container {
           padding: 0 0.75rem;
           margin: 1rem auto;
@@ -597,20 +641,7 @@
 
       @media (max-width: 380px) {
         .nav-links a {
-          font-size: 0.65rem;
-          padding: 0.25rem 0.5rem;
-        }
-        .nav-logo {
-          font-size: 1rem;
-        }
-        .cart-wrapper {
-          font-size: 0.65rem;
-          padding: 0.25rem 0.5rem;
-        }
-        .cart-badge {
-          font-size: 0.45rem;
-          min-width: 0.8rem;
-          height: 0.8rem;
+          font-size: 0.75rem;
         }
         .checkout-card {
           padding: 1rem 0.75rem;
@@ -630,7 +661,12 @@
       <div class="nav-container">
         <a href="{% url 'product_list' %}" class="nav-logo">Tea<span>Kay</span></a>
 
-        <div class="nav-links">
+        <!-- HAMBURGER BUTTON -->
+        <button class="hamburger" id="hamburgerBtn" onclick="toggleMenu()" aria-label="Toggle menu">
+          ☰
+        </button>
+
+        <div class="nav-links" id="navLinks">
           <a href="{% url 'product_list' %}">🏠 Home</a>
 
           <!-- Cart with Badge -->
@@ -713,8 +749,12 @@
         <!-- ─── PAYMENT FOOTER ─── -->
         <div class="payment-footer">
           <div class="secure-badge">
-            <span class="paystack-badge"> <img src="store\images\paystack.png" alt="Paystack" style="width: 20px; height: 20px;"> Secured by Paystack</span>
-            <span class="ssl-text">  </span> 256-bit SSL encrypted</span>
+            <span class="paystack-badge"> 
+              <!-- FIXED: Use Django static tag for paystack image -->
+              <img src="{% static 'store/images/paystack.png' %}" alt="Paystack" style="width: 20px; height: 20px;"> 
+              Secured by Paystack
+            </span>
+            <span class="ssl-text">🔒 256-bit SSL encrypted</span>
           </div>
           <p>You will be redirected to Paystack to complete your payment securely.</p>
         </div>
@@ -731,10 +771,19 @@
       <p>Designed by <span>teakay multimedia</span></p>
     </footer>
 
-    <!-- ─── DARK MODE SCRIPT ─── -->
+    <!-- ─── HAMBURGER & DARK MODE SCRIPT ─── -->
     <script>
-      const themeToggle = document.getElementById('themeToggle');
+      // HAMBURGER MENU TOGGLE
+      function toggleMenu() {
+        const navLinks = document.getElementById('navLinks');
+        const hamburger = document.getElementById('hamburgerBtn');
+        
+        navLinks.classList.toggle('open');
+        hamburger.classList.toggle('active');
+      }
 
+      // DARK MODE
+      const themeToggle = document.getElementById('themeToggle');
       const savedTheme = localStorage.getItem('theme');
       if (savedTheme) {
         document.documentElement.setAttribute('data-theme', savedTheme);
