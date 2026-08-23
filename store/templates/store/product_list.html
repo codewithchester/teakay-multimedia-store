@@ -1,3 +1,41 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} - Teakay Store{% endblock %}
+
+{% block meta_description %}{{ product.description|truncatechars:160 }}{% endblock %}
+
+{% block meta_keywords %}{{ product.name }}, electronics, gadgets, buy online{% endblock %}
+
+{% block og_title %}{{ product.name }} - Teakay Store{% endblock %}
+
+{% block og_description %}{{ product.description|truncatechars:160 }}{% endblock %}
+
+{% block og_image %}
+    {% if product.image %}
+        {{ product.image.url }}
+    {% else %}
+        {% static 'store/images/logo.png' %}
+    {% endif %}
+{% endblock %}
+
+{% block twitter_title %}{{ product.name }} - Teakay Store{% endblock %}
+
+{% block twitter_description %}{{ product.description|truncatechars:160 }}{% endblock %}
+
+{% block twitter_image %}
+    {% if product.image %}
+        {{ product.image.url }}
+    {% else %}
+        {% static 'store/images/logo.png' %}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<!-- Your existing product detail HTML goes here -->
+{% endblock %}
+
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">

@@ -1,263 +1,241 @@
 {% load static %}
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>{% block title %}Teakay Store - Shop the Best Products{% endblock %}</title>
+    <!-- ─────────────────────────────────────────────
+         BASIC SEO TAGS (For Google Search)
+         ───────────────────────────────────────────── -->
+    <title>{% block title %}Teakay Store - Premium Electronics & Gadgets{% endblock %}</title>
     
-    <link rel="icon" type="image/x-icon" href="{% static 'store/images/favicon.ico' %}">
-        
-
-
-    <meta name="theme-color" content="#667eea">
+    <meta name="description" content="{% block meta_description %}Shop premium electronics, accessories, and gadgets at Teakay Store. Best prices, fast delivery, and secure payment.{% endblock %}">
     
+    <meta name="keywords" content="{% block meta_keywords %}electronics, gadgets, headphones, smartwatches, Teakay Store, Ghana, online shopping{% endblock %}">
+    
+    <meta name="author" content="Teakay Multimedia">
+    
+    <meta name="robots" content="index, follow">
+    
+    <!-- For Google's Knowledge Graph -->
+    <meta name="google-site-verification" content="vwAE_ny3i9EHRjvqRoVMFHHU4HNi8KryvTIlCv9srMI"> <!-- Get this from Google Search Console -->
+    
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+    <!-- ─────────────────────────────────────────────
+         FAVICON & MOBILE TAB COLOR
+         ───────────────────────────────────────────── -->
+    <link rel="icon" type="image/png" href="{% static 'store/images/favicon.png' %}">
+    <link rel="apple-touch-icon" href="{% static 'store/images/favicon.png' %}">
+    <meta name="theme-color" content="#4f46e5">
+
+    <!-- ─────────────────────────────────────────────
+         OPEN GRAPH TAGS (WhatsApp, Facebook, LinkedIn, Pinterest)
+         ───────────────────────────────────────────── -->
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}Teakay Store - Premium Electronics & Gadgets{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Shop premium electronics, accessories, and gadgets at Teakay Store. Best prices, fast delivery, and secure payment.{% endblock %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:site_name" content="Teakay Store">
+    <meta property="og:image" content="{% block og_image %}{% static 'store/images/logo.png' %}{% endblock %}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Teakay Store Logo">
+    <meta property="og:locale" content="en_US">
+
+    <!-- ─────────────────────────────────────────────
+         TWITTER CARD TAGS (Twitter / X)
+         ───────────────────────────────────────────── -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}Teakay Store - Premium Electronics & Gadgets{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}Shop premium electronics, accessories, and gadgets at Teakay Store. Best prices, fast delivery, and secure payment.{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}{% static 'store/images/logo.png' %}{% endblock %}">
+    <meta name="twitter:site" content="@TeakayMultimedia"> <!-- Change to your real Twitter handle -->
+
+    <!-- ─────────────────────────────────────────────
+         STRUCTURED DATA (Schema.org for Rich Snippets)
+         ───────────────────────────────────────────── -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "OnlineStore",
+        "name": "Teakay Store",
+        "url": "{{ request.build_absolute_uri }}",
+        "logo": "{% static 'store/images/logo.png' %}",
+        "description": "Shop premium electronics, accessories, and gadgets at Teakay Store.",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Accra",
+            "addressCountry": "GH"
+        },
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+233-53-137-2310",
+            "contactType": "customer service"
+        }
+    }
+    </script>
+
     <link rel="stylesheet" href="{% static 'store/css/style.css' %}">
     <style>
-        /* Hamburger Menu Styles */
+        /* ───────────── HAMBURGER MENU ───────────── */
         .hamburger {
             display: none;
             background: transparent;
             border: none;
-            color: white;
-            font-size: 2em;
+            color: var(--text);
+            font-size: 1.8rem;
             cursor: pointer;
-            padding: 5px 15px;
-            border-radius: 5px;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.75rem;
             transition: all 0.3s ease;
+            z-index: 110;
         }
+        .hamburger:hover { background: var(--hover); }
+        .hamburger.active { transform: rotate(90deg); }
 
-        .hamburger:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .hamburger.active {
-            transform: rotate(90deg);
-        }
-
-        /* Cart Badge Styles */
-        .cart-icon-wrapper {
-            position: relative;
-            display: inline-block;
-            text-decoration: none;
-            color: white;
-            font-weight: 500;
-            padding: 8px 15px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-        }
-
-        .cart-icon-wrapper:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .cart-badge {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: #e74c3c;
-            color: white;
-            border-radius: 50%;
-            padding: 2px 7px;
-            font-size: 11px;
-            font-weight: 700;
-            min-width: 20px;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(231, 76, 60, 0.4);
-            animation: pulse 2s ease-in-out infinite;
-            line-height: 1.4;
-            border: 2px solid white;
-        }
-
-        .cart-badge.zero {
-            display: none;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-        }
-
-        /* Navbar */
+        /* ───────────── NAVBAR ───────────── */
         .navbar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 15px 0;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 0.7rem 1.25rem;
             position: sticky;
             top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            z-index: 50;
+            box-shadow: var(--shadow);
+            transition: background 0.3s ease, border-color 0.3s ease;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
         }
-
         .nav-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            color: white;
-            font-size: 1.8em;
-            font-weight: 700;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo:hover {
-            transform: scale(1.05);
-            transition: transform 0.3s;
-        }
-
-        /* Desktop Nav Links */
-        .nav-links {
-            display: flex;
-            gap: 10px;
-            align-items: center;
             flex-wrap: wrap;
+            gap: 0.5rem 0.75rem;
         }
-
-        .nav-links a {
-            color: white;
+        .nav-logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text);
             text-decoration: none;
-            font-weight: 500;
-            font-size: 1.05em;
-            transition: all 0.3s;
-            padding: 8px 15px;
-            border-radius: 25px;
+            letter-spacing: -0.025em;
+            white-space: nowrap;
+            transition: color 0.3s ease;
         }
-
-        .nav-links a:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
+        .nav-logo span { color: var(--primary); }
+        .nav-links { display: flex; align-items: center; gap: 0.15rem; flex-wrap: wrap; }
+        .nav-links a {
+            display: inline-flex; align-items: center; gap: 0.3rem;
+            padding: 0.4rem 0.75rem; border-radius: 0.75rem;
+            font-size: 0.85rem; font-weight: 500; color: var(--text-secondary);
+            text-decoration: none; transition: all 0.2s ease; white-space: nowrap;
         }
-
+        .nav-links a:hover { background: var(--hover); color: var(--text); }
         .nav-links .username {
-            color: white;
-            padding: 8px 15px;
-            font-weight: 500;
+            font-size: 0.8rem; font-weight: 500; color: var(--text-secondary);
+            padding: 0.4rem 0.5rem; white-space: nowrap;
+        }
+        .cart-wrapper {
+            position: relative; display: inline-flex; align-items: center; gap: 0.3rem;
+            padding: 0.4rem 0.75rem; border-radius: 0.75rem; font-size: 0.85rem;
+            font-weight: 500; color: var(--text-secondary); text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .cart-wrapper:hover { background: var(--hover); color: var(--text); }
+        .cart-badge {
+            position: absolute; top: -0.2rem; right: -0.15rem;
+            background: var(--badge-bg); color: var(--badge-text);
+            font-size: 0.6rem; font-weight: 700; min-width: 1.1rem; height: 1.1rem;
+            border-radius: 9999px; display: flex; align-items: center; justify-content: center;
+            padding: 0 0.25rem; border: 2px solid var(--card-bg);
+            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.25);
+            animation: pulse 2s ease-in-out infinite; line-height: 1;
+            transition: border-color 0.3s ease;
+        }
+        .cart-badge.zero { display: none; }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .nav-divider {
+            width: 1px; height: 1.5rem; background: var(--border);
+            margin: 0 0.1rem; transition: background 0.3s ease;
+        }
+        .theme-toggle {
+            background: var(--hover); border: 1px solid var(--border);
+            border-radius: 9999px; padding: 0.3rem 0.6rem; cursor: pointer;
+            font-size: 0.8rem; transition: all 0.2s ease;
+            color: var(--text-secondary); display: flex; align-items: center; gap: 0.3rem;
+            font-family: "Inter", sans-serif; font-weight: 500;
+        }
+        .theme-toggle:hover {
+            background: var(--primary); color: #ffffff; border-color: var(--primary);
         }
 
-        /* Messages */
-        .messages {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
-
-        .message {
-            padding: 15px 25px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            font-weight: 500;
-            animation: slideIn 0.5s ease;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .message-success { background: #d4edda; color: #155724; border-left: 5px solid #28a745; }
-        .message-error { background: #f8d7da; color: #721c24; border-left: 5px solid #dc3545; }
-        .message-warning { background: #fff3cd; color: #856404; border-left: 5px solid #ffc107; }
-
-        /* Footer */
+        /* ───────────── FOOTER ───────────── */
         .footer {
-            background: #2c3e50;
-            color: white;
-            text-align: center;
-            padding: 25px;
-            margin-top: 60px;
+            background: var(--footer-bg); border-top: 1px solid var(--footer-border);
+            padding: 1.25rem; text-align: center; margin-top: 2rem;
+            transition: all 0.3s ease; border-radius: 0.75rem;
         }
-
         .footer p {
-            margin: 0;
-            opacity: 0.8;
+            color: var(--footer-text); font-size: 0.85rem; font-weight: 400;
+            letter-spacing: 0.01em; margin: 0.25rem 0; transition: color 0.3s ease;
         }
+        .footer p span { color: var(--primary); font-weight: 600; }
 
-        /* Mobile Responsive */
+        /* ───────────── RESPONSIVE (HAMBURGER) ───────────── */
         @media (max-width: 768px) {
-            .hamburger {
-                display: block;
-                order: 3;
-            }
-
-            .nav-container {
-                flex-wrap: wrap;
-            }
-
-            .logo {
-                order: 1;
-                font-size: 1.5em;
-            }
-
+            .hamburger { display: block; margin-left: auto; }
+            .nav-container { flex-wrap: wrap; }
+            .nav-logo { order: 1; }
             .nav-links {
-                display: none;
-                width: 100%;
-                order: 4;
-                flex-direction: column;
-                align-items: flex-start;
-                padding: 20px 0;
-                gap: 15px;
-                border-top: 1px solid rgba(255, 255, 255, 0.3);
-                margin-top: 15px;
+                display: none; width: 100%; order: 3; flex-direction: column;
+                align-items: flex-start; padding: 1rem 0; gap: 0.5rem;
+                border-top: 1px solid var(--border); margin-top: 0.5rem;
                 animation: fadeInDown 0.4s ease;
             }
+            .nav-links.open { display: flex; }
+            .nav-links a { width: 100%; padding: 0.6rem 0.75rem; }
+            .nav-links .username { width: 100%; padding: 0.6rem 0.75rem; }
+            .nav-divider { width: 100%; height: 1px; margin: 0.5rem 0; }
+            .theme-toggle { width: 100%; justify-content: center; margin-top: 0.5rem; }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-            .nav-links.open {
-                display: flex;
-            }
-
-            .nav-links a {
-                width: 100%;
-                padding: 10px 15px;
-                border-radius: 8px;
-            }
-
-            .nav-links .username {
-                width: 100%;
-                padding: 10px 15px;
-            }
-
-            @keyframes fadeInDown {
-                from { opacity: 0; transform: translateY(-10px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
+        @media (max-width: 480px) {
+            .navbar { padding: 0.5rem 0.75rem; border-radius: 0.5rem; }
+            .nav-logo { font-size: 1.1rem; }
+            .nav-links a { font-size: 0.75rem; padding: 0.4rem 0.6rem; }
+            .nav-links .username { font-size: 0.7rem; padding: 0.3rem 0.4rem; }
+            .cart-wrapper { font-size: 0.75rem; padding: 0.3rem 0.6rem; }
+            .cart-badge { font-size: 0.5rem; min-width: 0.9rem; height: 0.9rem; }
+            .footer p { font-size: 0.75rem; }
         }
     </style>
 </head>
 <body>
-
-    <!-- ===== NAVIGATION ===== -->
+    <!-- ─── NAVIGATION ─── -->
     <nav class="navbar">
         <div class="nav-container">
-            <!-- Logo -->
-            <a href="{% url 'product_list' %}" class="logo">🛍️ Teakay Store</a>
-
-            <!-- Hamburger Menu Button -->
-            <button class="hamburger" id="hamburgerBtn" onclick="toggleMenu()">
-                ☰
-            </button>
-
-            <!-- Nav Links (Desktop & Mobile) -->
+            <a href="{% url 'product_list' %}" class="nav-logo">🛍️ Tea<span>Kay</span></a>
+            <button class="hamburger" id="hamburgerBtn" onclick="toggleMenu()" aria-label="Toggle menu">☰</button>
             <div class="nav-links" id="navLinks">
-                <a href="{% url 'product_list' %}">Home</a>
-
-                <!-- Cart with Badge -->
-                <a href="{% url 'cart_summary' %}" class="cart-icon-wrapper">
+                <a href="{% url 'product_list' %}">🏠 Home</a>
+                <a href="{% url 'cart_summary' %}" class="cart-wrapper">
                     🛒 Cart
                     <span class="cart-badge {% if cart_count == 0 %}zero{% endif %}">
                         {{ cart_count }}
                     </span>
                 </a>
-
+                <span class="nav-divider"></span>
                 {% if user.is_authenticated %}
                     <a href="{% url 'logout' %}">🚪 Logout</a>
                     <span class="username">👤 {{ user.username }}</span>
@@ -265,11 +243,12 @@
                     <a href="{% url 'login' %}">🔐 Login</a>
                     <a href="{% url 'signup' %}">✨ Sign Up</a>
                 {% endif %}
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙 Dark</button>
             </div>
         </div>
     </nav>
 
-    <!-- ===== MESSAGES ===== -->
+    <!-- ─── MESSAGES ─── -->
     {% if messages %}
     <div class="messages">
         {% for message in messages %}
@@ -278,7 +257,7 @@
     </div>
     {% endif %}
 
-    <!-- ===== CONTENT ===== -->
+    <!-- ─── CONTENT ─── -->
     {% block content %}
     {% endblock %}
 
@@ -296,22 +275,33 @@
     </script>
     <!--End of Tawk.to Script-->
 
-    <!-- ===== HAMBURGER MENU TOGGLE SCRIPT ===== -->
+    <!-- ─── FOOTER ─── -->
+    <footer class="footer">
+        <p>&copy; 2026 Teakay Multimedia. All rights reserved.</p>
+        <p>Design by <span>Teakay Multimedia</span></p>
+    </footer>
+
+    <!-- ─── HAMBURGER & DARK MODE SCRIPT ─── -->
     <script>
         function toggleMenu() {
             const navLinks = document.getElementById('navLinks');
             const hamburger = document.getElementById('hamburgerBtn');
-            
             navLinks.classList.toggle('open');
             hamburger.classList.toggle('active');
         }
+        const themeToggle = document.getElementById('themeToggle');
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            themeToggle.textContent = savedTheme === 'dark' ? '☀️ Light' : '🌙 Dark';
+        }
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggle.textContent = newTheme === 'dark' ? '☀️ Light' : '🌙 Dark';
+        });
     </script>
-
-    <!-- ===== FOOTER ===== -->
-    <footer class="footer">
-        <p>&copy; 2026 TEAKAY MULTIMEDIA. All rights reserved.</p>
-        <p>Design by teakay multimedia</p>
-    </footer>
-
 </body>
 </html>
