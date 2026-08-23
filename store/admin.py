@@ -47,7 +47,8 @@ class OrderAdmin(admin.ModelAdmin):
     list_filter = ('paid', 'created_at')
     search_fields = ('first_name', 'last_name', 'email')
     ordering = ('-created_at',)
-    
+    exclude = ('created_at',)
+
     # Group fields for better UI
     fieldsets = (
         ('Customer Information', {
@@ -62,6 +63,7 @@ class OrderAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
+    
     
     # Custom method
     def customer_name(self, obj):
