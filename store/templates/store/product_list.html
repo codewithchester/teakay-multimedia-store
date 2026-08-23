@@ -9,7 +9,7 @@
 
 <style>
     /* ═══════════════════════════════════════════════
-       CSS VARIABLES
+       PRODUCT LIST CSS (Only for this page)
        ═══════════════════════════════════════════════ */
     :root {
         --bg: #f1f5f9;
@@ -24,21 +24,14 @@
         --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.06);
         --primary: #4f46e5;
         --primary-hover: #4338ca;
-        --primary-light: rgba(79, 70, 229, 0.1);
         --badge-bg: #ef4444;
         --badge-text: #ffffff;
-        --footer-bg: #ffffff;
-        --footer-text: #94a3b8;
-        --footer-border: #e2e8f0;
         --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         --radius: 1.25rem;
         --radius-sm: 0.75rem;
         --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
-    /* ═══════════════════════════════════════════════
-       DARK MODE
-       ═══════════════════════════════════════════════ */
     [data-theme="dark"] {
         --bg: #0f172a;
         --card-bg: #1e293b;
@@ -55,12 +48,9 @@
         --footer-border: #334155;
         --badge-bg: #ef4444;
         --badge-text: #ffffff;
-        --primary-light: rgba(79, 70, 229, 0.2);
     }
 
-    /* ═══════════════════════════════════════════════
-       HERO SLIDER
-       ═══════════════════════════════════════════════ */
+    /* ─── HERO SLIDER ─── */
     .hero-slider {
         position: relative;
         width: 100%;
@@ -76,19 +66,10 @@
     }
 
     @media (max-width: 768px) {
-        .hero-slider {
-            aspect-ratio: 16 / 8;
-            border-radius: 1rem;
-            margin: 1rem auto 0;
-        }
+        .hero-slider { aspect-ratio: 16 / 8; border-radius: 1rem; margin: 1rem auto 0; }
     }
-
     @media (max-width: 480px) {
-        .hero-slider {
-            aspect-ratio: 16 / 10;
-            border-radius: 0.75rem;
-            margin: 0.75rem auto 0;
-        }
+        .hero-slider { aspect-ratio: 16 / 10; border-radius: 0.75rem; margin: 0.75rem auto 0; }
     }
 
     .slider-track {
@@ -308,23 +289,16 @@
         box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
     }
 
-    .slider-dots .dot:hover {
-        background: rgba(255, 255, 255, 0.7);
-    }
-
     @media (max-width: 480px) {
         .slider-dots .dot { width: 7px; height: 7px; }
         .slider-dots { bottom: 0.8rem; gap: 0.4rem; }
     }
 
-    /* ═══════════════════════════════════════════════
-       PRODUCT GRID
-       ═══════════════════════════════════════════════ */
+    /* ─── PRODUCT GRID ─── */
     .main-container {
         max-width: 1200px;
         margin: 2.5rem auto;
         padding: 0 1.25rem 2rem;
-        flex: 1;
         width: 100%;
     }
 
@@ -345,14 +319,8 @@
         transition: color 0.3s ease;
     }
 
-    .section-title span {
-        color: var(--primary);
-    }
-
-    .section-subtitle {
-        color: var(--text-muted);
-        font-size: 0.9rem;
-    }
+    .section-title span { color: var(--primary); }
+    .section-subtitle { color: var(--text-muted); font-size: 0.9rem; }
 
     .product-grid {
         display: grid;
@@ -360,7 +328,6 @@
         gap: 1.5rem;
     }
 
-    /* ── Product Card ── */
     .product-card {
         background: var(--card-bg);
         border-radius: var(--radius);
@@ -385,10 +352,6 @@
     .product-card:nth-child(4) { animation-delay: 0.2s; }
     .product-card:nth-child(5) { animation-delay: 0.25s; }
     .product-card:nth-child(6) { animation-delay: 0.3s; }
-    .product-card:nth-child(7) { animation-delay: 0.35s; }
-    .product-card:nth-child(8) { animation-delay: 0.4s; }
-    .product-card:nth-child(9) { animation-delay: 0.45s; }
-    .product-card:nth-child(10) { animation-delay: 0.5s; }
 
     @keyframes cardFadeIn {
         to { opacity: 1; transform: translateY(0); }
@@ -418,9 +381,7 @@
         transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
-    .product-card:hover .card-image img {
-        transform: scale(1.08);
-    }
+    .product-card:hover .card-image img { transform: scale(1.08); }
 
     .product-card .card-badge {
         position: absolute;
@@ -435,17 +396,6 @@
         padding: 0.25rem 0.8rem;
         border-radius: 9999px;
         box-shadow: 0 4px 16px rgba(79, 70, 229, 0.3);
-        animation: badgePulse 2s ease-in-out infinite;
-    }
-
-    .product-card .card-badge.sale {
-        background: #ef4444;
-        box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
-    }
-
-    @keyframes badgePulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.05); }
     }
 
     .product-card .card-body {
@@ -462,7 +412,6 @@
         text-transform: uppercase;
         letter-spacing: 0.6px;
         margin-bottom: 0.25rem;
-        transition: color 0.3s ease;
     }
 
     .product-card .card-body h3 {
@@ -475,7 +424,6 @@
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
-        transition: color 0.3s ease;
     }
 
     .product-card .card-body .description {
@@ -488,7 +436,6 @@
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
-        transition: color 0.3s ease;
     }
 
     .product-card .card-body .price-row {
@@ -504,7 +451,6 @@
         font-size: 1.25rem;
         font-weight: 700;
         color: var(--primary);
-        transition: color 0.3s ease;
     }
 
     .product-card .card-body .price-old {
@@ -545,7 +491,6 @@
         border-radius: var(--radius);
         border: 1px solid var(--border);
         grid-column: 1 / -1;
-        transition: all 0.3s ease;
     }
 
     .empty-state .empty-icon {
@@ -565,14 +510,12 @@
         font-weight: 700;
         color: var(--text);
         margin-bottom: 0.5rem;
-        transition: color 0.3s ease;
     }
 
     .empty-state p {
         color: var(--text-secondary);
         font-size: 1rem;
         margin-bottom: 1.5rem;
-        transition: color 0.3s ease;
     }
 
     .empty-state .btn-primary {
@@ -706,7 +649,7 @@
                 {% else %}
                     <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop" alt="Product" loading="lazy" />
                 {% endif %}
-                <span class="card-badge {% if forloop.counter|divisibleby:2 %}sale{% endif %}">
+                <span class="card-badge">
                     {% if forloop.counter|divisibleby:2 %}Sale{% else %}New{% endif %}
                 </span>
             </div>
@@ -717,9 +660,6 @@
                 <p class="description">{{ product.description|truncatechars:60 }}</p>
                 <div class="price-row">
                     <span class="price">${{ product.price }}</span>
-                    {% if forloop.counter|divisibleby:3 %}
-                    <span class="price-old">${{ product.price|add:"20" }}</span>
-                    {% endif %}
                 </div>
                 <span class="btn-view">View Details →</span>
             </div>
