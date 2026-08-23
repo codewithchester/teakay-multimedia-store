@@ -1,6 +1,12 @@
 from django.urls import path
 from . import views
 from .admin_dashboard import admin_dashboard
+from django.contrib.sitemaps.views import sitemap
+from .sitemaps import ProductSitemap
+
+sitemaps = {
+    'products': ProductSitemap,
+}
 
 urlpatterns = [
     path('', views.product_list, name='product_list'),
@@ -11,6 +17,9 @@ urlpatterns = [
     
     # Admin dashboard
     path('admin/dashboard/', admin_dashboard, name='admin_dashboard'),
+
+    # Sitemap
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 
 
 ]
