@@ -195,6 +195,7 @@
             letter-spacing: -0.025em;
             white-space: nowrap;
             transition: color 0.3s ease;
+            
         }
 
         .nav-logo span {
@@ -727,23 +728,38 @@
         }
 
         @media (max-width: 640px) {
-            .navbar {
-                padding: 0.5rem 0.75rem;
-            }
-            .nav-container {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 0.4rem;
-            }
-            .nav-logo {
-                text-align: center;
-                font-size: 1.1rem;
-            }
-            .nav-links {
-                justify-content: center;
-                gap: 0.1rem;
-                flex-wrap: wrap;
-            }
+           .nav-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .nav-logo {
+        order: 1;
+    }
+
+    .hamburger {
+        display: block;
+        order: 2;
+        margin-left: 0; /* Prevents pushing outside flex bounds */
+    }
+
+    .nav-links {
+        display: none;
+        width: 100%;
+        order: 3;
+        flex-direction: column;
+        align-items: stretch;
+        padding: 1rem 0;
+        border-top: 1px solid var(--border);
+        margin-top: 0.5rem;
+    }
+
+    .nav-links.open {
+        display: flex;
+    }
             .nav-links a {
                 font-size: 0.8rem;
                 padding: 0.3rem 0.6rem;
@@ -887,6 +903,40 @@
                 font-size: 1.2rem;
             }
         }
+
+        /* ─── HAMBURGER ─── */
+        .hamburger {
+            display: none;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 1.6rem;
+            cursor: pointer;
+            padding: 0.2rem 0.5rem;
+            border-radius: var(--radius-sm);
+            transition: all 0.3s ease;
+            order: 2;
+            margin-left: auto;
+        }
+        .hamburger:hover { background: var(--hover); }
+        .hamburger.active { transform: rotate(90deg); }
+
+        @media (max-width: 640px) {
+            .hamburger { display: block; }
+            .nav-container { flex-wrap: wrap; }
+            .nav-logo { order: 1; }
+            .nav-links {
+                display: none;
+                width: 100%;
+                order: 3;
+                flex-direction: column;
+                align-items: stretch;
+                padding: 1rem 0;
+                border-top: 1px solid var(--border);
+                margin-top: 0.5rem;
+            }
+            .nav-links.open { display: flex; }
+        }
     </style>
 </head>
 <body>
@@ -900,9 +950,10 @@
     <!-- ─── NAVIGATION ─── -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="{% url 'product_list' %}" class="nav-logo">Tea<span>Kay</span></a>
+            <a href="{% url 'product_list' %}" class="nav-logo">🛍️ Tea<span>Kay</span></a>
+            <button class="hamburger" id="hamburgerBtn" onclick="toggleMenu()" aria-label="Toggle menu">☰</button>
 
-            <div class="nav-links">
+            <div class="nav-links" id="navLinks">
                 <a href="{% url 'product_list' %}">🏠 Home</a>
 
                 <a href="{% url 'cart_summary' %}" class="cart-wrapper">
@@ -1019,8 +1070,15 @@
         <p>Designed by <span>Teakay Multimedia</span></p>
     </footer>
 
-    <!-- ─── DARK MODE SCRIPT ─── -->
+    <!-- ─── HAMBURGER & DARK MODE SCRIPT ─── -->
     <script>
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            const hamburger = document.getElementById('hamburgerBtn');
+            navLinks.classList.toggle('open');
+            hamburger.classList.toggle('active');
+        }
+
         const themeToggle = document.getElementById('themeToggle');
         const savedTheme = localStorage.getItem('theme');
 
