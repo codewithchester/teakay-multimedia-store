@@ -48,7 +48,7 @@ django-cacheops==7.0
 drf-spectacular==0.28.0
 django-storages==1.14.4
 
-─── Optional (if you use these) ───
+# ─── Optional (if you use these) ───
 django-allauth[socialaccount.providers.github]
 django-redis==5.4.0
 celery==5.4.0
