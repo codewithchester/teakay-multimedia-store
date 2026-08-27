@@ -1,17 +1,55 @@
+# ─── Core Django ───
 Django==5.2.5
-whitenoise==6.9.0
+djangorestframework==3.15.2
+djangorestframework-simplejwt==5.3.1
+django-cors-headers==4.4.0
+
+# ─── Authentication & Social Login ───
 django-allauth==65.4.0
-Pillow==10.4.0
+django-allauth[socialaccount]
+django-allauth[socialaccount.providers.google]
+django-allauth[socialaccount.providers.facebook]
+
+# ─── Payment ───
+paystackapi==0.2.0
 requests==2.32.3
-gunicorn==23.0.0
-Django==5.2.5
-whitenoise==6.9.0
-django-allauth==65.4.0
-Pillow==10.4.0
-requests==2.32.3
-gunicorn==23.0.0
-python-dotenv==1.0.1
-dj-database-url==2.2.0
+
+# ─── Database & Environment ───
 psycopg2-binary==2.9.9
+dj-database-url==2.2.0
+python-dotenv==1.0.1
+
+# ─── Static Files & Server ───
+whitenoise==6.9.0
+gunicorn==23.0.0
+
+# ─── Image Processing ───
+Pillow==10.4.0
+
+# ─── Forms & UI ───
 django-crispy-forms==2.3
 crispy-bootstrap5==2024.2
+
+# ─── Filtering, Search & Admin Enhancements ───
+django-filter==24.3
+django-import-export==4.1.1
+django-extensions==3.2.3
+django-debug-toolbar==4.4.6
+
+# ─── Utilities & Data ───
+python-dateutil==2.9.0.post0
+pytz==2024.2
+six==1.16.0
+lxml==5.3.0
+openpyxl==3.1.5
+
+# ─── API & Misc ───
+django-cacheops==7.0
+drf-spectacular==0.28.0
+django-storages==1.14.4
+
+─── Optional (if you use these) ───
+django-allauth[socialaccount.providers.github]
+django-redis==5.4.0
+celery==5.4.0
+redis==5.2.0
